@@ -57,32 +57,41 @@ const AmbientLayer: React.FC = () => {
 
 const Header: React.FC = () => {
   const { togglePhrasebook, toggleDocsPage, toggleHotels, toggleFlight, toggleRestaurants, toggleActivities, toggleBooking, toggleAIPlanner } = useStore();
+  const [menuOpen, setMenuOpen] = React.useState(false);
   return (
     <header className="app-header">
       <div className="header-left">
         <h1>The Wanderer's Sketchbook</h1>
         <p>An 18-Day Journey Through Landscapes, Flavors, and Hidden Valleys</p>
       </div>
-      <svg width="84" height="84" style={{ position:'absolute', right:'32px', top:'12px', opacity:0.07, color:'#1e1208', pointerEvents:'none' }} viewBox="0 0 100 100">
-        <ellipse cx="50" cy="55" rx="32" ry="26" fill="currentColor" />
-        <ellipse cx="40" cy="24" rx="5" ry="12" fill="currentColor" transform="rotate(-15 40 24)" />
-        <ellipse cx="60" cy="24" rx="5" ry="12" fill="currentColor" transform="rotate(15 60 24)" />
-        <circle cx="38" cy="48" r="4" fill="currentColor" /><circle cx="62" cy="48" r="4" fill="currentColor" />
-        <path d="M 32 55 Q 50 68 68 55" stroke="currentColor" strokeWidth="2" fill="none" />
-        <line x1="26" y1="48" x2="12" y2="46" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="26" y1="52" x2="10" y2="52" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="74" y1="48" x2="88" y2="46" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="74" y1="52" x2="90" y2="52" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
       <div className="header-actions">
-        <button className="docs-trigger-btn" onClick={toggleDocsPage} title="Documents"><span aria-hidden="true">📎</span><span className="btn-label"> Docs</span></button>
-        <button className="docs-trigger-btn" onClick={toggleHotels} title="Hotels"><span aria-hidden="true">🏨</span><span className="btn-label"> Hotels</span></button>
-        <button className="docs-trigger-btn" onClick={toggleFlight} title="Flights"><span aria-hidden="true">✈</span><span className="btn-label"> Flights</span></button>
-        <button className="docs-trigger-btn" onClick={toggleRestaurants} title="Restaurants"><span aria-hidden="true">🍜</span><span className="btn-label"> Dining</span></button>
-        <button className="docs-trigger-btn" onClick={toggleActivities} title="Activities"><span aria-hidden="true">🗺</span><span className="btn-label"> Activities</span></button>
-        <button className="docs-trigger-btn" onClick={toggleBooking} title="Booking Timeline"><span aria-hidden="true">📅</span><span className="btn-label"> Book</span></button>
-        <button className="docs-trigger-btn ai-trigger-btn" onClick={toggleAIPlanner} title="AI Live Planner"><span aria-hidden="true">✦</span><span className="btn-label"> AI</span></button>
-        <button className="pb-trigger-btn" onClick={togglePhrasebook} title="Japanese Phrasebook">言葉</button>
+        <div className="header-btns-desktop">
+          <button className="docs-trigger-btn" onClick={toggleDocsPage} title="Documents"><span aria-hidden="true">📎</span><span className="btn-label"> Docs</span></button>
+          <button className="docs-trigger-btn" onClick={toggleHotels} title="Hotels"><span aria-hidden="true">🏨</span><span className="btn-label"> Hotels</span></button>
+          <button className="docs-trigger-btn" onClick={toggleFlight} title="Flights"><span aria-hidden="true">✈</span><span className="btn-label"> Flights</span></button>
+          <button className="docs-trigger-btn" onClick={toggleRestaurants} title="Restaurants"><span aria-hidden="true">🍜</span><span className="btn-label"> Dining</span></button>
+          <button className="docs-trigger-btn" onClick={toggleActivities} title="Activities"><span aria-hidden="true">🗺</span><span className="btn-label"> Activities</span></button>
+          <button className="docs-trigger-btn" onClick={toggleBooking} title="Booking Timeline"><span aria-hidden="true">📅</span><span className="btn-label"> Book</span></button>
+          <button className="docs-trigger-btn ai-trigger-btn" onClick={toggleAIPlanner} title="AI Live Planner"><span aria-hidden="true">✦</span><span className="btn-label"> AI</span></button>
+          <button className="pb-trigger-btn" onClick={togglePhrasebook} title="Japanese Phrasebook">言葉</button>
+        </div>
+        <div className="header-btns-mobile">
+          <button className="docs-trigger-btn ai-trigger-btn" onClick={toggleAIPlanner}>✦ AI</button>
+          <button className="pb-trigger-btn" onClick={togglePhrasebook}>言葉</button>
+          <div style={{ position: 'relative' }}>
+            <button className="mobile-menu-btn" onClick={() => setMenuOpen(v => !v)}>⋯</button>
+            {menuOpen && (
+              <div className="mobile-menu-dropdown" onClick={() => setMenuOpen(false)}>
+                <button onClick={toggleHotels}>🏨 Hotels</button>
+                <button onClick={toggleFlight}>✈ Flights</button>
+                <button onClick={toggleRestaurants}>🍜 Dining</button>
+                <button onClick={toggleActivities}>🗺 Activities</button>
+                <button onClick={toggleBooking}>📅 Booking</button>
+                <button onClick={toggleDocsPage}>📎 Docs</button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );
