@@ -3,7 +3,10 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 
-const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
+  .split(",")
+  .map(e => e.trim().toLowerCase())
+  .filter(Boolean);
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
