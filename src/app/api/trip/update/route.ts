@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// POST /api/trip — update activity state, AI suggestions, notes, reservations
-export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+const SHARED_USER_ID = "shared";
 
-  const userId = session.user.id;
+export async function POST(req: NextRequest) {
   const body = await req.json();
   const { action } = body;
+  const userId = SHARED_USER_ID;
 
   if (action === "toggle-done") {
     const { activityId } = body;
@@ -23,27 +19,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ isDone: state.isDone });
   }
 
-  if (action === "edit-activity") {
-    const { activityId, customTitle, customTime, customDesc } = body;
-    const state = await prisma.activityState.upsert({
-      where: { userId_activityId: { userId, activityId } },
-      update: { customTitle, customTime, customDesc },
-      create: { userId, activityId, customTitle, customTime, customDesc },
-    });
-    return NextResponse.json(state);
-  }
-
   if (action === "add-ai-suggestion") {
     const { day, title, time, type, lat, lng, description } = body;
-    const suggestion = await prisma.aiSuggestion.create({
-      data: { userId, day, title, time, type, lat, lng, description },
-    });
+    const suggestion = await prisma.aiSuggestion.create({ data: { userId, day, title, time, type, lat, lng, description } });
     return NextResponse.json(suggestion);
   }
 
   if (action === "remove-ai-suggestion") {
-    const { id } = body;
-    await prisma.aiSuggestion.deleteMany({ where: { id, userId } });
+    await prisma.aiSuggestion.deleteMany({ where: { id: body.id, userId } });
     return NextResponse.json({ ok: true });
   }
 
@@ -59,15 +42,12 @@ export async function POST(req: NextRequest) {
 
   if (action === "add-reservation") {
     const { name, date, time, confirmNo, notes, activityKey } = body;
-    const res = await prisma.reservation.create({
-      data: { userId, name, date, time, confirmNo, notes, activityKey },
-    });
+    const res = await prisma.reservation.create({ data: { userId, name, date, time, confirmNo, notes, activityKey } });
     return NextResponse.json(res);
   }
 
   if (action === "remove-reservation") {
-    const { id } = body;
-    await prisma.reservation.deleteMany({ where: { id, userId } });
+    await prisma.reservation.deleteMany({ where: { id: body.id, userId } });
     return NextResponse.json({ ok: true });
   }
 

@@ -8,7 +8,6 @@ export type { Activity, ActivityType, Region } from '@/types';
 export { useStore } from '@/store/ui';
 import type { Activity, ActivityType, DayMeals, HotelAnchor, Reservation, UserEdits, DocEntry, BookItem, BookUrgency, BookCategory, HotelStop, Phrase, PhraseCategory } from '@/types';
 import { useStore } from '@/store/ui';
-import { useTripCtx } from './TripContext';
 import { regionColors, regionMap, hotelAnchors, REGION_HEROES, typeIcon, typeLabel, regionGroups, regionMap2 } from '@/constants';
 import { activities, haikus, meals, dayMeta, _H5, _H7, _H5b, _genHaiku } from '@/data/activities';
 import { restaurantPrices, restaurantNotes, activityPrices } from '@/data/dining';
