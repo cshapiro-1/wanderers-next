@@ -56,7 +56,7 @@ const AmbientLayer: React.FC = () => {
 };
 
 const Header: React.FC = () => {
-  const { togglePhrasebook, toggleDocsPage, toggleHotels, toggleFlight, toggleRestaurants, toggleActivities, toggleBooking, toggleAIPlanner } = useStore();
+  const { togglePhrasebook, toggleDocsPage, toggleHotels, toggleFlight, toggleRestaurants, toggleActivities, toggleBooking, toggleAIPlanner, rainMode, toggleRainMode, toggleCurrency, toggleTakkyubin } = useStore();
   const [menuOpen, setMenuOpen] = React.useState(false);
   return (
     <header className="app-header">
@@ -66,6 +66,10 @@ const Header: React.FC = () => {
       </div>
       <div className="header-actions">
         <div className="header-btns-desktop">
+          <button className={`docs-trigger-btn ${rainMode ? 'active' : ''}`} onClick={toggleRainMode} title="Rain Mode: Weather Alternative Engine" style={{ background: rainMode ? '#5878a0' : undefined, color: rainMode ? '#fff' : undefined }}><span aria-hidden="true">{rainMode ? '🌧️' : '☀️'}</span><span className="btn-label">{rainMode ? ' Rain' : ' Sun'}</span></button>
+          <button className="docs-trigger-btn" onClick={toggleCurrency} title="Live Currency & Points Burn"><span aria-hidden="true">💴</span><span className="btn-label"> Rates</span></button>
+          <button className="docs-trigger-btn" onClick={toggleTakkyubin} title="Luggage Forwarding (Takkyubin)"><span aria-hidden="true">📦</span><span className="btn-label"> Luggage</span></button>
+          <button className="docs-trigger-btn" onClick={downloadIcsCalendar} title="Export Itinerary to Calendar (.ics)"><span aria-hidden="true">📅</span><span className="btn-label"> Export</span></button>
           <button className="docs-trigger-btn" onClick={toggleDocsPage} title="Documents"><span aria-hidden="true">📎</span><span className="btn-label"> Docs</span></button>
           <button className="docs-trigger-btn" onClick={toggleHotels} title="Hotels"><span aria-hidden="true">🏨</span><span className="btn-label"> Hotels</span></button>
           <button className="docs-trigger-btn" onClick={toggleFlight} title="Flights"><span aria-hidden="true">✈</span><span className="btn-label"> Flights</span></button>
@@ -76,6 +80,8 @@ const Header: React.FC = () => {
           <button className="pb-trigger-btn" onClick={togglePhrasebook} title="Japanese Phrasebook">言葉</button>
         </div>
         <div className="header-btns-mobile">
+          <button className="docs-trigger-btn" onClick={toggleRainMode}>{rainMode ? '🌧️' : '☀️'}</button>
+          <button className="docs-trigger-btn" onClick={toggleCurrency}>💴</button>
           <button className="docs-trigger-btn ai-trigger-btn" onClick={toggleAIPlanner}>✦ AI</button>
           <button className="pb-trigger-btn" onClick={togglePhrasebook}>言葉</button>
           <div style={{ position: 'relative' }}>
@@ -87,6 +93,8 @@ const Header: React.FC = () => {
                 <button onClick={toggleRestaurants}>🍜 Dining</button>
                 <button onClick={toggleActivities}>🗺 Activities</button>
                 <button onClick={toggleBooking}>📅 Booking</button>
+                <button onClick={toggleTakkyubin}>📦 Luggage (Takkyubin)</button>
+                <button onClick={downloadIcsCalendar}>📅 Export to Calendar (.ics)</button>
                 <button onClick={toggleDocsPage}>📎 Docs</button>
               </div>
             )}
@@ -1690,6 +1698,262 @@ const DayScrollVignette: React.FC<{ acts: Activity[]; day: number }> = ({ acts, 
 
 
 
+
+// ── RAIN MODE ALTERNATIVE SANCTUARIES ─────────────────────────────────────────
+const RAIN_ALTERNATIVES: Record<number, { title: string; area: string; desc: string; icon: string }> = {
+  1: { title: "Ginza Six & Mitsukoshi Depachika", area: "Ginza", desc: "Skip the rain outside by exploring Ginza's underground luxury food halls — gourmet pastries, seasonal fruit, and warm dashi broth counters.", icon: "🏬" },
+  2: { title: "Omotesando Hills & Covered Cat Street Arcades", area: "Harajuku / Omotesando", desc: "Ghibli is completely indoor; pair it with Tadao Ando's spiral Omotesando Hills complex and sheltered boutique cafes.", icon: "☕" },
+  3: { title: "Tokyo Skytree Solamachi & Akihabara Radio Kaikan", area: "East Tokyo", desc: "Multi-floor indoor retro electronics cathedrals and over 300 covered shops and dining halls beneath Skytree.", icon: "🎮" },
+  4: { title: "Isetan Shinjuku B1/B2 Food Hall & Seiko Museum", area: "Ginza / Shinjuku", desc: "Japan's most celebrated subterranean food market followed by watchmaking gallery floors under glass.", icon: "🍰" },
+  5: { title: "Takashimaya Times Square & Eagle Jazz Kissa", area: "Shinjuku", desc: "Sheltered 14-story complex connected to Shinjuku Station, followed by an underground dim amber vinyl listening bar.", icon: "🎷" },
+  6: { title: "Pola Museum of Art & Hakone Open-Air Picasso Hall", area: "Hakone", desc: "A subterranean glass museum nestled inside a beech forest featuring Monet, Renoir, and sheltered sculpture pavilions.", icon: "🏛️" },
+  7: { title: "In-Room Onsen Soaking & Tatami Kaiseki", area: "Gora Kadan", desc: "Watch the mountain rain drift across imperial cedar pines from your private thermal bath with hot green tea.", icon: "♨️" },
+  8: { title: "Nakanoshima Museum of Art & Whity Umeda Labyrinth", area: "Osaka", desc: "Modern black-box museum next to the Conrad, connected to Osaka's endless covered underground shopping city.", icon: "🎨" },
+  9: { title: "Kobe City Museum & Sannomiya Center Gai Covered Arcade", area: "Kobe", desc: "A 600-meter weatherproof covered shopping street with tea salons, retro kissaten, and sheltered teppanyaki.", icon: "🛍️" },
+  10: { title: "Yamazaki Indoor Tasting Lounge & Kuromon Arcade", area: "Yamazaki / Namba", desc: "Suntory whisky museum, library of single malts, and Kuromon Market's 300 sheltered food stalls.", icon: "🥃" },
+  11: { title: "Todai-ji Great Buddha Hall & Shinsaibashi Covered Arcade", area: "Nara / Osaka", desc: "The world's largest wooden building protects the 15m bronze Daibutsu, followed by 2km of covered Dotonbori shopping.", icon: "🪷" },
+  12: { title: "Kaiyukan Osaka Aquarium & Tempozan Marketplace", area: "Osaka Bay", desc: "One of the world's greatest indoor aquariums with whale sharks in a 9-meter deep central Pacific tank.", icon: "🦈" },
+  13: { title: "Sanjusangen-do 1,001 Golden Statues & Kyoto Station Atrium", area: "Higashiyama", desc: "An endless 120-meter indoor hall of gilded 12th-century deities directly across from the Hyatt Regency.", icon: "✨" },
+  14: { title: "Kyoto National Museum of Modern Art & Hosomi Museum", area: "Okazaki", desc: "Two premier cultural spaces right by Heian Shrine with indoor Japanese gardens and sheltered teahouses.", icon: "🖼️" },
+  15: { title: "Teramachi & Shinkyogoku Covered Historic Shotengai", area: "Central Kyoto", desc: "Miles of historic covered arcade streets lined with 300-year-old tea shops, woodblock print dealers, and ramen counters.", icon: "🏮" },
+  16: { title: "Kennin-ji Zen Hall & Takagamine Indoor Tea Pavilion", area: "Gion", desc: "Kyoto's oldest Zen temple with twin dragon ceilings on cedar tatami, completely sheltered from rain.", icon: "🐉" },
+  17: { title: "Fukuda Art Museum & Arashiyama Scenic Waterfront Gallery", area: "Arashiyama", desc: "Floor-to-ceiling glass panoramic cafe overlooking the misty Oi River and Togetsukyo bridge in the rain.", icon: "🍵" },
+  18: { title: "Nijo Castle Ninomaru Palace & Gekkeikan Sake Museum", area: "Central Kyoto / Fushimi", desc: "Walk the covered nightingale-floor corridors of Tokugawa shoguns and tour ancient wooden sake fermentation storehouses.", icon: "🍶" },
+  19: { title: "Kyoto Station Isetan & KIX Sky View Lounge", area: "Transit", desc: "Completely sheltered transit via JR Haruka express straight into the Renzo Piano airport terminal.", icon: "🚄" },
+};
+
+// ── CALENDAR (.ICS) EXPORTER ──────────────────────────────────────────────────
+const downloadIcsCalendar = () => {
+  const events = [
+    { title: "Flight to Tokyo (Arrive Haneda/Narita)", start: "20270528T140000Z", end: "20270528T170000Z", desc: "Clear customs and head to Hyatt Centric Ginza Tokyo", loc: "Haneda Airport, Tokyo" },
+    { title: "Check-in: Hyatt Centric Ginza Tokyo", start: "20270528T173000Z", end: "20270528T183000Z", desc: "5-Night Stay booked with World of Hyatt Points", loc: "6-6-7 Ginza, Chuo City, Tokyo" },
+    { title: "Ginza Sushi Counter (O-toro Omakase)", start: "20270528T203000Z", end: "20270528T223000Z", desc: "Hinoki counter reservation (Saito / Sawada / Harutaka)", loc: "Ginza, Tokyo" },
+    { title: "Studio Ghibli Museum (Mitaka)", start: "20270529T120000Z", end: "20270529T140000Z", desc: "Noon Entry ticket. Lawson lottery reservation.", loc: "1-1-83 Shimorenjaku, Mitaka, Tokyo" },
+    { title: "Shinjuku Golden Gai & Omoide Yokocho Bender", start: "20270531T193000Z", end: "20270601T033000Z", desc: "Nocturnal bar crawl across 200 micro-bars. Sleep in tomorrow!", loc: "Kabukicho, Shinjuku, Tokyo" },
+    { title: "Tokaido Shinkansen to Odawara / Hakone", start: "20270602T090000Z", end: "20270602T100000Z", desc: "Bullet train from Tokyo Station to Odawara, transfer to Gora Kadan", loc: "Tokyo Station, Tokyo" },
+    { title: "Check-in: Gora Kadan (Hakone)", start: "20270602T150000Z", end: "20270602T160000Z", desc: "Relais & Chateaux luxury onsen ryokan. Kaiseki included.", loc: "1300 Gora, Hakone, Kanagawa" },
+    { title: "Odawara to Shin-Osaka Shinkansen Hikari", start: "20270604T133000Z", end: "20270604T160000Z", desc: "High-speed rail along Pacific coast to Osaka", loc: "Odawara Station, Kanagawa" },
+    { title: "Check-in: Conrad Osaka", start: "20270604T170000Z", end: "20270604T180000Z", desc: "5-Night 5-Star Stay on Nakanoshima island (Hilton)", loc: "3-2-4 Nakanoshima, Kita Ward, Osaka" },
+    { title: "Suntory Yamazaki Distillery Tasting", start: "20270606T100000Z", end: "20270606T123000Z", desc: "Whisky distillery tour & library tasting lounge", loc: "5-2-1 Yamazaki, Shimamoto, Osaka" },
+    { title: "Hanshin Tigers at Koshien Stadium", start: "20270608T180000Z", end: "20270608T213000Z", desc: "Legendary Japanese baseball atmosphere & 7th-inning balloons", loc: "Koshien Stadium, Nishinomiya" },
+    { title: "Check-in: Hyatt Regency Kyoto", start: "20270609T143000Z", end: "20270609T153000Z", desc: "6-Night Stay in Higashiyama booked with Hyatt Points", loc: "644-2 Sanjusangendo Mawaricho, Higashiyama, Kyoto" },
+    { title: "Kikunoi Honten Farewell Kaiseki", start: "20270614T200000Z", end: "20270614T230000Z", desc: "17-Course Capstone Kaiseki in Gion since 1912", loc: "459 Shimokawaracho, Higashiyama, Kyoto" },
+    { title: "Kyoto to KIX Haruka Express & Flight", start: "20270615T083000Z", end: "20270615T120000Z", desc: "Haruka Express to Kansai Airport for international flight", loc: "Kyoto Station, Kyoto" }
+  ];
+
+  let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Wanderers Sketchbook//Japan 2027//EN\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:Wanderers Japan Itinerary 2027\n";
+  events.forEach(e => {
+    ics += "BEGIN:VEVENT\nSUMMARY:" + e.title + "\nDESCRIPTION:" + e.desc + "\nLOCATION:" + e.loc + "\nDTSTART:" + e.start + "\nDTEND:" + e.end + "\nSTATUS:CONFIRMED\nEND:VEVENT\n";
+  });
+  ics += "END:VCALENDAR";
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'wanderers_japan_itinerary_2027.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
+
+// ── TAKKYUBIN LUGGAGE FORWARDING MODAL ────────────────────────────────────────
+const TakkyubinModal: React.FC = () => {
+  const { takkyubinOpen, toggleTakkyubin } = useStore();
+  const [copied, setCopied] = React.useState(false);
+  if (!takkyubinOpen) return null;
+
+  const copyAddress = () => {
+    navigator.clipboard.writeText("〒530-0005 大阪府大阪市北区中之島3-2-4 コンラッド大阪 フロント気付 (宿泊者: Collin Shapiro, チェックイン: 6月4日) TEL: 06-6222-0111");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <div className="docs-page">
+      <div className="docs-page-header">
+        <div>
+          <h2 className="docs-page-title">📦 Takkyubin Luggage Dispatch Voucher</h2>
+          <p className="docs-page-sub">Day 6 Departure · Forward bags from Tokyo to Conrad Osaka (Hands-Free to Hakone!)</p>
+        </div>
+        <button className="docs-close-btn" onClick={toggleTakkyubin}>✕ Close</button>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div style={{ background: "rgba(200,126,24,0.08)", border: "2px dashed #c87e18", borderRadius: "12px", padding: "20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+            <span style={{ fontSize: "13px", fontWeight: 700, color: "#c87e18", textTransform: "uppercase", letterSpacing: "1px" }}>Recipient Address / お届け先</span>
+            <button onClick={copyAddress} style={{ padding: "6px 12px", background: copied ? "#4a8a4a" : "#3a2a1a", color: "#fff", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}>
+              {copied ? "✓ Copied to Clipboard" : "📋 Copy Japanese Text"}
+            </button>
+          </div>
+          <div style={{ background: "#fff", padding: "16px", borderRadius: "8px", border: "1px solid #d0c8b8", fontFamily: "monospace", fontSize: "14px", lineHeight: "1.6", color: "#1e1208" }}>
+            <strong>〒530-0005</strong><br/>
+            <strong>大阪府大阪市北区中之島3-2-4</strong><br/>
+            <strong>コンラッド大阪 フロント気付</strong><br/>
+            <span>宿泊者代表: Collin Shapiro</span><br/>
+            <span>チェックイン予定日: 2027年6月4日</span><br/>
+            <span>TEL: 06-6222-0111</span>
+          </div>
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: "12px", border: "1px solid #d0c8b8", padding: "18px" }}>
+          <h4 style={{ fontSize: "15px", fontWeight: 700, color: "#1e1208", marginBottom: "10px" }}>🗣️ Show This to the Hotel Concierge / Front Desk:</h4>
+          <div style={{ background: "#f8f4ec", padding: "14px", borderRadius: "8px", borderLeft: "4px solid #c87e18", marginBottom: "12px" }}>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: "#1e1208", marginBottom: "4px" }}>
+              「大阪のホテルへ荷物の配送（宅急便）をお願いできますか？6月4日にチェックイン予定です。」
+            </div>
+            <div style={{ fontSize: "12.5px", color: "#7a6a5a", fontStyle: "italic" }}>
+              &quot;Osaka no hoteru e nimotsu no haisou (takkyubin) o onegai dekimasu ka? Roku-gatsu yokka ni chekkuin yotei desu.&quot;
+            </div>
+            <div style={{ fontSize: "12px", color: "#4a3a2a", marginTop: "4px" }}>
+              (Translation: Could you please arrange luggage forwarding to our Osaka hotel? We check in on June 4th.)
+            </div>
+          </div>
+          <div style={{ fontSize: "12.5px", color: "#6a5a4a", lineHeight: "1.5" }}>
+            💡 <strong>Estimated Cost:</strong> ~¥2,200–¥2,800 ($15–$18) per large suitcase. Deliveries sent on Day 6 morning will arrive reliably on Day 7 or Day 8 morning directly inside your Conrad Osaka room.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── CURRENCY & POINTS BURN TRACKER MODAL ──────────────────────────────────────
+const CurrencyBurnModal: React.FC = () => {
+  const { currencyOpen, toggleCurrency, jpyRate, setJpyRate } = useStore();
+  const [usdVal, setUsdVal] = React.useState("100");
+  const [jpyVal, setJpyVal] = React.useState("15500");
+
+  if (!currencyOpen) return null;
+
+  const handleUsdChange = (v: string) => {
+    setUsdVal(v);
+    const n = parseFloat(v) || 0;
+    setJpyVal(Math.round(n * jpyRate).toString());
+  };
+
+  const handleJpyChange = (v: string) => {
+    setJpyVal(v);
+    const n = parseFloat(v) || 0;
+    setUsdVal((n / jpyRate).toFixed(2));
+  };
+
+  return (
+    <div className="docs-page">
+      <div className="docs-page-header">
+        <div>
+          <h2 className="docs-page-title">💴 Live Currency & Points Burn Tracker</h2>
+          <p className="docs-page-sub">Exchange Rate: 1 USD = {jpyRate} JPY · 220k Hyatt Points Portfolio</p>
+        </div>
+        <button className="docs-close-btn" onClick={toggleCurrency}>✕ Close</button>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: "12px", border: "1px solid #d0c8b8", padding: "20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#1e1208" }}>💱 Real-Time Calculator</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#7a6a5a" }}>
+              <span>Rate:</span>
+              <input type="number" value={jpyRate} onChange={e => setJpyRate(parseFloat(e.target.value) || 155)} style={{ width: "60px", padding: "3px 6px", borderRadius: "4px", border: "1px solid #d0c8b8", fontSize: "12px", fontWeight: 600 }} />
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "12px", alignItems: "center" }}>
+            <div>
+              <label style={{ fontSize: "11px", fontWeight: 600, color: "#7a6a5a", textTransform: "uppercase" }}>US Dollar ($ USD)</label>
+              <input type="number" value={usdVal} onChange={e => handleUsdChange(e.target.value)} style={{ width: "100%", padding: "10px", fontSize: "18px", fontWeight: 700, borderRadius: "8px", border: "1.5px solid #c87e18", background: "#fff", marginTop: "4px" }} />
+            </div>
+            <span style={{ fontSize: "20px", color: "#999", marginTop: "16px" }}>⇄</span>
+            <div>
+              <label style={{ fontSize: "11px", fontWeight: 600, color: "#7a6a5a", textTransform: "uppercase" }}>Japanese Yen (¥ JPY)</label>
+              <input type="number" value={jpyVal} onChange={e => handleJpyChange(e.target.value)} style={{ width: "100%", padding: "10px", fontSize: "18px", fontWeight: 700, borderRadius: "8px", border: "1.5px solid #4a7848", background: "#fff", marginTop: "4px" }} />
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "8px", marginTop: "14px", flexWrap: "wrap" }}>
+            {[1000, 5000, 10000, 30000, 50000].map(amt => (
+              <button key={amt} onClick={() => handleJpyChange(amt.toString())} style={{ padding: "4px 10px", borderRadius: "16px", border: "1px solid #d0c8b8", background: "#f8f4ec", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}>
+                ¥{amt.toLocaleString()} (~${Math.round(amt / jpyRate)})
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: "12px", border: "1px solid #d0c8b8", padding: "20px" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#1e1208", marginBottom: "14px" }}>💳 220k Hyatt Points Portfolio Allocation</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "#f8f4ec", borderRadius: "8px", borderLeft: "4px solid #c87e18" }}>
+              <div>
+                <strong style={{ color: "#1e1208" }}>Tokyo (5 Nights): Hyatt Centric Ginza</strong>
+                <div style={{ fontSize: "12px", color: "#7a6a5a" }}>Cat 7 · 30,000 pts/night × 5 nights</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 700, color: "#c87e18" }}>150,000 pts</div>
+                <div style={{ fontSize: "11px", color: "#4a8a4a" }}>$0 Cash (Saved ~$2,500)</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "#f8f4ec", borderRadius: "8px", borderLeft: "4px solid #5878a0" }}>
+              <div>
+                <strong style={{ color: "#1e1208" }}>Hakone (2 Nights): Gora Kadan</strong>
+                <div style={{ fontSize: "12px", color: "#7a6a5a" }}>Relais & Chateaux Luxury Ryokan (Kaiseki included)</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 700, color: "#5878a0" }}>0 pts</div>
+                <div style={{ fontSize: "11px", color: "#7a6a5a" }}>$2,400 Cash ($1,200/nt)</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "#f8f4ec", borderRadius: "8px", borderLeft: "4px solid #b84428" }}>
+              <div>
+                <strong style={{ color: "#1e1208" }}>Osaka (5 Nights): Conrad Osaka</strong>
+                <div style={{ fontSize: "12px", color: "#7a6a5a" }}>5-Star Hilton Luxury Skyline (40F Sky Lobby)</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 700, color: "#b84428" }}>0 pts</div>
+                <div style={{ fontSize: "11px", color: "#7a6a5a" }}>~$1,900 Cash (~$380/nt)</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "#f8f4ec", borderRadius: "8px", borderLeft: "4px solid #7a4a88" }}>
+              <div>
+                <strong style={{ color: "#1e1208" }}>Kyoto (6 Nights): Hyatt Place / Regency Kyoto</strong>
+                <div style={{ fontSize: "12px", color: "#7a6a5a" }}>Cat 3 (12k pts/nt) or Cat 6 (25k pts/nt)</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 700, color: "#7a4a88" }}>72,000 pts</div>
+                <div style={{ fontSize: "11px", color: "#4a8a4a" }}>$0 Cash (Saved ~$1,500)</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #e0d8c8", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: "12px", color: "#7a6a5a" }}>Total Hyatt Points Used: <strong>222,000 pts</strong></div>
+              <div style={{ fontSize: "12px", color: "#4a8a4a" }}>Estimated Value Generated: <strong>~$4,000+ USD (~3.2¢/pt)</strong></div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontSize: "11px", textTransform: "uppercase", color: "#999", fontWeight: 600 }}>Est. Out-of-Pocket Hotels</div>
+              <div style={{ fontSize: "20px", fontWeight: 800, color: "#1e1208" }}>~$4,300 USD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── RAIN MODE ALTERNATIVE CARD ────────────────────────────────────────────────
+const RainModeDayCard: React.FC<{ day: number }> = ({ day }) => {
+  const alt = RAIN_ALTERNATIVES[day];
+  if (!alt) return null;
+  return (
+    <div style={{ background: "linear-gradient(135deg, rgba(88,120,160,0.15) 0%, rgba(60,90,130,0.08) 100%)", border: "1.5px solid #5878a060", borderRadius: "8px", padding: "14px 16px", display: "flex", gap: "14px", alignItems: "flex-start", margin: "0 0 16px" }}>
+      <span style={{ fontSize: "24px", flexShrink: 0 }}>{alt.icon}</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
+          <span style={{ fontSize: "10px", fontFamily: "var(--font-display)", letterSpacing: "1.2px", textTransform: "uppercase", color: "#5878a0", fontWeight: 700 }}>🌧️ Rain Mode Sanctuary Alternative</span>
+          <span style={{ fontSize: "11px", color: "#888" }}>· {alt.area}</span>
+        </div>
+        <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e1208", marginBottom: "4px" }}>{alt.title}</div>
+        <div style={{ fontSize: "12.5px", color: "#4a5a6a", lineHeight: "1.45" }}>{alt.desc}</div>
+      </div>
+    </div>
+  );
+};
 
 const ActivityItem: React.FC<{ activity: any; index: number; transit?: { icon: string; mode: string; time: string } }> = ({ activity, index, transit }) => {
   const { activeDay, editMode, userEdits, updateActivityEdit, updateNoteEdit, selectedActivity, selectActivity, hoverActivity, doneActivities, toggleDone } = useStore();

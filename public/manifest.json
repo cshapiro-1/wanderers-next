@@ -1,0 +1,16 @@
+{
+  "name": "The Wanderer's Sketchbook",
+  "short_name": "Wanderer",
+  "description": "An 18-Day Journey Through Landscapes, Flavors, and Hidden Valleys in Japan",
+  "start_url": "/trip",
+  "display": "standalone",
+  "background_color": "#1a1a14",
+  "theme_color": "#1a1a14",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

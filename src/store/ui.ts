@@ -16,6 +16,10 @@ export interface TravelStore {
   restaurantsOpen: boolean;
   activitiesOpen: boolean;
   bookingOpen: boolean;
+  currencyOpen: boolean;
+  takkyubinOpen: boolean;
+  rainMode: boolean;
+  jpyRate: number;
   storyDay: number | null;
   storyStep: number;
   openStory: (day: number) => void;
@@ -24,6 +28,10 @@ export interface TravelStore {
   aiPlannerOpen: boolean;
   aiSuggestions: Record<number, Activity[]>;
   toggleAIPlanner: () => void;
+  toggleRainMode: () => void;
+  toggleCurrency: () => void;
+  toggleTakkyubin: () => void;
+  setJpyRate: (rate: number) => void;
   addAiSuggestion: (day: number, act: Activity) => void;
   removeAiSuggestion: (day: number, idx: number) => void;
   clearAiSuggestions: (day: number) => void;
@@ -68,6 +76,10 @@ export const useStore = create<TravelStore>((set) => ({
   restaurantsOpen: false,
   activitiesOpen: false,
   bookingOpen: false,
+  currencyOpen: false,
+  takkyubinOpen: false,
+  rainMode: false,
+  jpyRate: 155,
   storyDay: null,
   storyStep: 0,
   openStory: (day) => set(() => ({ storyDay: day, storyStep: 0 })),
@@ -82,6 +94,10 @@ export const useStore = create<TravelStore>((set) => ({
   aiPlannerOpen: false,
   aiSuggestions: getLS(AI_KEY, {}),
   toggleAIPlanner: () => set((s) => ({ aiPlannerOpen: !s.aiPlannerOpen })),
+  toggleRainMode: () => set((s) => ({ rainMode: !s.rainMode })),
+  toggleCurrency: () => set((s) => ({ currencyOpen: !s.currencyOpen })),
+  toggleTakkyubin: () => set((s) => ({ takkyubinOpen: !s.takkyubinOpen })),
+  setJpyRate: (rate) => set({ jpyRate: rate }),
   addAiSuggestion: (day, act) => set((state) => {
     const next = { ...state.aiSuggestions, [day]: [...(state.aiSuggestions[day] || []), act] };
     localStorage.setItem(AI_KEY, JSON.stringify(next));
