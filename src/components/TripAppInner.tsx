@@ -2585,7 +2585,7 @@ const ReturnTransitCard: React.FC<{ data: ReturnTransitData; hotelName: string }
 
 
 const JournalPane: React.FC = () => {
-  const { activeDay, doneActivities, openStory, aiSuggestions } = useStore();
+  const { activeDay, doneActivities, openStory, aiSuggestions, rainMode } = useStore();
   const region = regionMap[activeDay];
   const color = regionColors[region];
   const hero = REGION_HEROES[region] || REGION_HEROES.tokyo;
@@ -2639,6 +2639,7 @@ const JournalPane: React.FC = () => {
           </button>
           </div>
         </div>
+        {rainMode && <RainModeDayCard day={activeDay} />}
 
         {/* Compact schedule timeline */}
         <div className="schedule-timeline-wrap" style={{ padding: '14px 16px 10px', background: 'rgba(0,0,0,0.025)', borderRadius: '5px', border: '1px solid var(--paper-fold)' }}>
@@ -4109,34 +4110,70 @@ const _spawn = (region:string, W:number, H:number): _P => {
 const _regionCount: Record<string,number> = { tokyo:18, kyoto:16, hakone:7, osaka:22 };
 
 const ParticleCanvas: React.FC = () => {
-  const { activeDay } = useStore();
+  const { activeDay, rainMode } = useStore();
   const region = regionMap[activeDay] || 'tokyo';
   const cvRef = React.useRef<HTMLCanvasElement>(null);
   const ptRef = React.useRef<_P[]>([]);
   const rafRef = React.useRef(0);
   const rRef = React.useRef('');
+  const rainRef = React.useRef(rainMode);
 
   React.useEffect(() => {
+    rainRef.current = rainMode;
     const cv = cvRef.current; if (!cv) return;
     const ctx = cv.getContext('2d'); if (!ctx) return;
     const resize = () => { cv.width = window.innerWidth; cv.height = window.innerHeight; };
     resize(); window.addEventListener('resize', resize);
 
-    if (rRef.current !== region) {
-      rRef.current = region;
-      const n = _regionCount[region] || 0;
-      ptRef.current = Array.from({length:n}, () => {
-        const p = _spawn(region, cv.width, cv.height);
-        p.life = Math.floor(Math.random() * p.maxLife);
-        return p;
-      });
-    }
+    const n = rainMode ? 50 : (_regionCount[region] || 0);
+    ptRef.current = Array.from({length:n}, () => {
+      if (rainMode) {
+        return {
+          x: Math.random() * cv.width,
+          y: Math.random() * cv.height,
+          vx: -0.8,
+          vy: 8 + Math.random() * 7,
+          sz: 16 + Math.random() * 12,
+          op: 0.2 + Math.random() * 0.25,
+          maxOp: 0.45,
+          rot: 0.08,
+          vrot: 0,
+          life: Math.floor(Math.random() * 80),
+          maxLife: 80,
+          phase: 0,
+          color: '#6a90c0'
+        };
+      }
+      const p = _spawn(region, cv.width, cv.height);
+      p.life = Math.floor(Math.random() * p.maxLife);
+      return p;
+    });
 
     const tick = () => {
       const W = cv.width, H = cv.height;
       ctx.clearRect(0,0,W,H);
       ptRef.current.forEach((p,i) => {
         p.life++;
+        if (rainRef.current) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.life >= p.maxLife || p.y > H + 40 || p.x < -20) {
+            p.x = Math.random() * (W + 100);
+            p.y = -20;
+            p.life = 0;
+          }
+          ctx.save();
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 1.3;
+          ctx.globalAlpha = p.op;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - 2.5, p.y + p.sz);
+          ctx.stroke();
+          ctx.restore();
+          return;
+        }
+
         const lr = p.life / p.maxLife;
         p.op = lr < .12 ? (lr/.12)*p.maxOp : lr > .82 ? ((1-lr)/.18)*p.maxOp : p.maxOp;
         if (region==='osaka') {
@@ -4187,14 +4224,14 @@ const ParticleCanvas: React.FC = () => {
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [region]);
+  }, [region, rainMode]);
 
   return <canvas ref={cvRef} style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:8,opacity:.9}} />;
 };
 
 
 const App: React.FC = () => {
-  const { editMode, docsPageOpen, hotelsOpen, flightOpen, restaurantsOpen, activitiesOpen, bookingOpen, activeDay, setActiveDay, storyDay, aiPlannerOpen } = useStore();
+  const { editMode, docsPageOpen, hotelsOpen, flightOpen, restaurantsOpen, activitiesOpen, bookingOpen, currencyOpen, takkyubinOpen, activeDay, setActiveDay, storyDay, aiPlannerOpen } = useStore();
   const touchStartRef = React.useRef(0);
   const [mobileTab, setMobileTab] = React.useState<'journal'|'map'>('journal');
   return (
@@ -4206,11 +4243,13 @@ const App: React.FC = () => {
         <DayNav />
         {/* region groups now shown in DayNav */}
         {docsPageOpen && <DocsPage />}
-       {hotelsOpen && <HotelsPanel />}
-       {flightOpen && <FlightPanel />}
-       {restaurantsOpen && <RestaurantsPanel />}
-       {activitiesOpen && <ActivitiesPanel />}
-       {bookingOpen && <BookingPanel />}
+        {hotelsOpen && <HotelsPanel />}
+        {flightOpen && <FlightPanel />}
+        {restaurantsOpen && <RestaurantsPanel />}
+        {activitiesOpen && <ActivitiesPanel />}
+        {bookingOpen && <BookingPanel />}
+        {currencyOpen && <CurrencyBurnModal />}
+        {takkyubinOpen && <TakkyubinModal />}
         <main className="main-content" style={{ display: docsPageOpen ? 'none' : undefined }}>
           <section className="journal-pane-wrapper" id="journal-pane"
             style={{ borderRight: '1px solid var(--paper-fold)', boxShadow: editMode ? 'inset 0 0 0 2px var(--amber)' : 'none' }}
