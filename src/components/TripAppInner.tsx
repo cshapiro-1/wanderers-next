@@ -213,1497 +213,1381 @@ const DayScrollVignette: React.FC<{ acts: Activity[]; day: number }> = ({ acts, 
 
   // ── Vine decoration per region ────────────────────────────────────────────
   // ── Per-activity vine decorations (colorful, activity-specific) ──────────
-  // ── Title-specific vine decorations ────────────────────────────────────────
+  // ── Title-specific vine decorations (Full bespoke SVG vignettes for all 18+ days)
   const getTitleDecor = (title: string, c1: string, c2: string, c3: string): React.ReactNode => {
     const tl = title.toLowerCase();
     const i = ink;
     const f = faint;
 
-    // ── Airports ──────────────────────────────────────────────────────────
-    if (tl.includes('airport') || tl.includes('narita') || tl.includes('haneda')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Airplane body */}
-        <path d="M-18 0 Q-10 -3 0 -2 Q10 -1 18 0 Q10 1 0 2 Q-10 3 -18 0Z" stroke={i} strokeWidth="1.2"/>
-        {/* Wings */}
-        <path d="M-4 -2 L-8 -14 L8 -12 L4 -2" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
-        <path d="M8 0 L6 8 L14 7 L12 0" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
-        {/* Tail */}
-        <path d="M-14 0 L-18 -8 L-10 -7 L-12 0" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        {/* Windows */}
-        {[-4,0,4,8].map(wx => <circle key={wx} cx={wx} cy={-1} r="1.2" fill={c1} fillOpacity="0.7" stroke="none"/>)}
-        {/* Runway lines */}
-        <line x1="-10" y1="12" x2="10" y2="12" stroke={f} strokeWidth="1.5" strokeDasharray="3,3"/>
-      </g>
-    );
+    // ── 1. Airports & Aviation (Haneda, Narita, KIX) ──────────────────────────
+    if (tl.includes('airport') || tl.includes('narita') || tl.includes('haneda') || tl.includes('kix') || tl.includes('kansai international')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Airplane body */}
+          <path d="M-18 0 Q-10 -3 0 -2 Q10 -1 18 0 Q10 1 0 2 Q-10 3 -18 0Z" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
+          {/* Wings */}
+          <path d="M-4 -2 L-8 -15 L6 -12 L3 -2" fill={c2} fillOpacity="0.45" stroke={i} strokeWidth="1"/>
+          <path d="M6 0 L4 9 L12 8 L10 0" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
+          {/* Tail */}
+          <path d="M-14 0 L-18 -9 L-10 -8 L-12 0" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+          {/* Windows */}
+          {[-4, 0, 4, 8].map(wx => <circle key={wx} cx={wx} cy={-1} r="1.1" fill={c1} stroke="none"/>)}
+          {/* Runway / Jetstream */}
+          <line x1="-14" y1="13" x2="14" y2="13" stroke={f} strokeWidth="1.5" strokeDasharray="3,3"/>
+          <path d="M-18 16 Q-8 14 0 16 Q8 18 18 16" stroke={c3} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Watches / Seiko ───────────────────────────────────────────────────
-    if (tl.includes('seiko') || tl.includes('watch') || tl.includes('clock')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Watch case */}
-        <circle cx="0" cy="0" r="14" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.4"/>
-        <circle cx="0" cy="0" r="11" stroke={i} strokeWidth="0.7"/>
-        {/* Hour markers */}
-        {[0,30,60,90,120,150,180,210,240,270,300,330].map(a => {
-          const rad = a * Math.PI / 180;
-          const r1 = a % 90 === 0 ? 7 : 8.5;
-          const r2 = 10.5;
-          return <line key={a} x1={(Math.cos(rad)*r1).toFixed(1)} y1={(Math.sin(rad)*r1).toFixed(1)}
-            x2={(Math.cos(rad)*r2).toFixed(1)} y2={(Math.sin(rad)*r2).toFixed(1)}
-            stroke={i} strokeWidth={a % 90 === 0 ? 1.4 : 0.7}/>;
-        })}
-        {/* Hands */}
-        <line x1="0" y1="2" x2="0" y2="-8" stroke={i} strokeWidth="1.5"/>
-        <line x1="0" y1="1.5" x2="6" y2="-4" stroke={i} strokeWidth="1"/>
-        <line x1="0" y1="1" x2="0" y2="5" stroke={c1} strokeWidth="1.2"/>
-        <circle cx="0" cy="0" r="1.5" fill={c1} stroke="none"/>
-        {/* Crown */}
-        <rect x="13" y="-2" width="4" height="4" rx="1" stroke={i} strokeWidth="0.8"/>
-        {/* Strap */}
-        <rect x="-5" y="14" width="10" height="8" rx="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <rect x="-5" y="-22" width="10" height="8" rx="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-      </g>
-    );
+    // ── 2. Tokaido & Kyoto Shinkansen (Bullet Train) ──────────────────────────
+    if (tl.includes('shinkansen') || tl.includes('bullet train') || tl.includes('nozomi') || tl.includes('hikari') || tl.includes('haruka')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Aerodynamic Shinkansen nose */}
+          <path d="M-18 6 Q-6 6 8 4 Q18 2 22 -2 Q18 -5 6 -6 L-18 -6 Z" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          {/* Cockpit canopy */}
+          <path d="M8 2 Q14 0 16 -3 Q10 -4 6 -3 Z" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="0.7"/>
+          {/* Passenger windows */}
+          {[-14, -8, -2].map(wx => (
+            <rect key={wx} x={wx} y="-4" width="4" height="3" rx="0.5" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.5"/>
+          ))}
+          {/* Speed line & Blue racing stripe */}
+          <path d="M-18 1 Q0 1 18 -1" stroke={c1} strokeWidth="1.2"/>
+          {/* Rails & Speed motion */}
+          <line x1="-22" y1="9" x2="22" y2="9" stroke={i} strokeWidth="1.1"/>
+          {[-16, -6, 4, 14].map(sx => <line key={sx} x1={sx} y1="9" x2={sx - 3} y2="13" stroke={f} strokeWidth="0.8"/>)}
+          {/* Distant Mt Fuji silhouette */}
+          <path d="M8 -9 L14 -19 L20 -9" fill={f} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
+          <path d="M12 -15 Q14 -16 16 -15" stroke={i} strokeWidth="0.5"/>
+        </g>
+      );
+    }
 
-    // ── Knife Street / Kappabashi ─────────────────────────────────────────
-    if (tl.includes('knife') || tl.includes('kappabashi')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Chef knife */}
-        <path d="M-18 4 L10 -8 Q18 -10 18 -4 Q16 2 10 2 L-18 8Z"
-          fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <line x1="10" y1="-3" x2="-14" y2="5" stroke={i} strokeWidth="0.5"/>
-        {/* Handle */}
-        <rect x="-20" y="2" width="10" height="8" rx="2" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="1"/>
-        {[0,1,2].map(n => <circle key={n} cx={-17+n*3} cy="6" r="1" fill={i} fillOpacity="0.5" stroke="none"/>)}
-        {/* Ladle */}
-        <path d="M6 12 Q8 18 4 22 Q0 26 -2 22 Q-4 18 0 14 Q2 10 6 12Z"
-          fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <line x1="6" y1="12" x2="16" y2="2" stroke={i} strokeWidth="1"/>
-        {/* Small bowls */}
-        <path d="M12 18 Q18 16 22 20 Q20 24 14 24 Q10 22 12 18Z" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 3. Mountain & Scenic Railways (Romancecar, Tozan, Sagano) ─────────────
+    if (tl.includes('tozan') || tl.includes('odakyu') || tl.includes('romancecar') || tl.includes('sagano') || tl.includes('scenic train')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Mountain gorge & ridge */}
+          <path d="M-22 14 L-12 2 L-2 8 L10 -10 L22 4" stroke={f} strokeWidth="1"/>
+          {/* Switchback railway track */}
+          <path d="M-20 18 L-4 8 L12 14 L22 2" stroke={c2} strokeWidth="1.6"/>
+          {/* Train car */}
+          <rect x="-8" y="2" width="18" height="10" rx="1.5" fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.1" transform="rotate(-15,1,7)"/>
+          {/* Windows */}
+          {[-4, 2, 8].map(wx => (
+            <rect key={wx} x={wx} y="4" width="4" height="4" rx="0.5" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.5" transform="rotate(-15,1,7)"/>
+          ))}
+          {/* Cedar pines on mountain */}
+          {[-18, 16].map(px => (
+            <path key={px} d={`M${px} 12 L${px + 4} 4 L${px + 8} 12 Z`} fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.6"/>
+          ))}
+        </g>
+      );
+    }
 
-    // ── Meiji Jingu / Gardens ─────────────────────────────────────────────
-    if (tl.includes('meiji') || tl.includes('jingu') || tl.includes('gyoen')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Iris flowers */}
-        {[[-10,0],[0,-4],[10,0]].map(([fx,fy]) => (
-          <g key={fx} transform={`translate(${fx},${fy})`}>
-            <line x1="0" y1="12" x2="0" y2="-2" stroke={i} strokeWidth="1"/>
-            {[[-30,1],[0,-1],[30,1]].map(([ra,oy]) => (
-              <ellipse key={ra} cx={(Math.cos(ra*Math.PI/180)*6).toFixed(1)}
-                cy={(Math.sin(ra*Math.PI/180)*6+oy).toFixed(1)}
-                rx="4" ry="2.5" fill={c1} fillOpacity="0.65" stroke={i} strokeWidth="0.7"
-                transform={`rotate(${ra})`}/>
-            ))}
-            <ellipse cx="0" cy="-2" rx="2" ry="5" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.6"/>
-          </g>
-        ))}
-        {/* Wooden torii */}
-        <line x1="-18" y1="14" x2="-18" y2="6" stroke={c3} strokeWidth="2"/>
-        <line x1="18" y1="14" x2="18" y2="6" stroke={c3} strokeWidth="2"/>
-        <line x1="-20" y1="7" x2="20" y2="7" stroke={c3} strokeWidth="2"/>
-        <line x1="-16" y1="10" x2="16" y2="10" stroke={c3} strokeWidth="1.2"/>
-      </g>
-    );
+    // ── 4. Hyatt Centric Ginza Tokyo ──────────────────────────────────────────
+    if (tl.includes('centric') || (tl.includes('hyatt') && tl.includes('ginza'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Ginza modern boutique glass tower */}
+          <rect x="-12" y="-22" width="24" height="38" rx="1" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.2"/>
+          {/* Architectural glass grid */}
+          {[0, 1, 2, 3, 4].map(row => (
+            [0, 1, 2].map(col => (
+              <rect key={`${row}-${col}`} x={-9 + col * 6} y={-19 + row * 6} width="4.5" height="4" rx="0.3"
+                fill={c2} fillOpacity={(row + col) % 2 === 0 ? 0.6 : 0.15} stroke={i} strokeWidth="0.4"/>
+            ))
+          ))}
+          {/* Entrance canopy & Ginza street flag */}
+          <rect x="-14" y="11" width="28" height="5" rx="0.5" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.9"/>
+          <line x1="-16" y1="16" x2="16" y2="16" stroke={i} strokeWidth="1.1"/>
+        </g>
+      );
+    }
 
-    // ── Nezu Museum ───────────────────────────────────────────────────────
-    if (tl.includes('nezu')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Hanging scroll */}
-        <rect x="-8" y="-16" width="16" height="22" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
-        <rect x="-9" y="-18" width="18" height="3" rx="1" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-        <rect x="-9" y="6" width="18" height="3" rx="1" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-        {/* Brushstroke kanji-like marks */}
-        <path d="M-4 -12 Q-2 -8 -4 -4" stroke={i} strokeWidth="1.5"/>
-        <path d="M0 -12 Q2 -8 0 -4" stroke={i} strokeWidth="1.5"/>
-        <path d="M4 -12 Q2 -8 4 -4" stroke={i} strokeWidth="1.5"/>
-        <line x1="-5" y1="-4" x2="5" y2="-4" stroke={i} strokeWidth="1"/>
-        {/* Bamboo fence */}
-        {[-16,-10,10,16].map(bx => (
-          <g key={bx}>
-            <line x1={bx} y1="10" x2={bx} y2="22" stroke={c3} strokeWidth="1.4"/>
-            <line x1={bx-2} y1="14" x2={bx+2} y2="14" stroke={c3} strokeWidth="0.7"/>
-          </g>
-        ))}
-        <line x1="-18" y1="14" x2="18" y2="14" stroke={c3} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 5. Gora Kadan Hakone (Imperial Ryokan) ────────────────────────────────
+    if (tl.includes('gora kadan') || (tl.includes('ryokan') && tl.includes('hakone'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Imperial villa hip roof */}
+          <path d="M-20 2 L0 -14 L20 2" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.3"/>
+          <path d="M-22 0 L0 -16 L22 0" stroke={f} strokeWidth="0.8"/>
+          {/* Traditional wooden villa frame */}
+          <rect x="-16" y="2" width="32" height="16" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          {/* Shoji lattices */}
+          {[-11, -3, 5].map(sx => (
+            <g key={sx}>
+              <rect x={sx} y="5" width="6" height="11" rx="0.3" stroke={i} strokeWidth="0.6"/>
+              <line x1={sx + 3} y1="5" x2={sx + 3} y2="16" stroke={f} strokeWidth="0.3"/>
+              <line x1={sx} y1="10" x2={sx + 6} y2="10" stroke={f} strokeWidth="0.3"/>
+            </g>
+          ))}
+          {/* Hakone pine & mist */}
+          <path d="M-20 18 Q-10 15 0 18 Q10 21 20 18" stroke={c3} strokeWidth="1"/>
+        </g>
+      );
+    }
 
-    // ── Sumida Park / Skytree ─────────────────────────────────────────────
-    if (tl.includes('sumida') || tl.includes('skytree')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Skytree - tall tapered tower */}
-        <path d="M-4 22 L-3 8 L-1 -12 L0 -22 L1 -12 L3 8 L4 22" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        {/* Observation decks */}
-        <ellipse cx="0" cy="0" rx="5" ry="2" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="1"/>
-        <ellipse cx="0" cy="-10" rx="3.5" ry="1.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        {/* Asahi building golden flame */}
-        <rect x="12" y="6" width="8" height="16" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-        <path d="M12 6 Q16 -2 22 2 Q20 6 16 6Z" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="0.8"/>
-        {/* River */}
-        <path d="M-22 22 Q-10 19 0 22 Q10 25 22 22" stroke={c2} strokeWidth="1" strokeOpacity="0.7"/>
-        <path d="M-22 25 Q-10 23 0 25 Q10 27 22 25" stroke={c2} strokeWidth="0.6" strokeOpacity="0.5"/>
-      </g>
-    );
+    // ── 6. Conrad Osaka (High-Rise Skyline) ───────────────────────────────────
+    if (tl.includes('conrad') || (tl.includes('osaka') && tl.includes('hotel'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Twin modern high-rise skyscraper on Nakanoshima */}
+          <rect x="-14" y="-24" width="12" height="42" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          <rect x="2" y="-18" width="12" height="36" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          {/* 40F Sky Lobby observation band */}
+          <rect x="-15" y="-14" width="14" height="4" fill={c3} fillOpacity="0.7" stroke={i} strokeWidth="0.7"/>
+          {/* River confluence base */}
+          <path d="M-22 18 Q-8 14 0 18 Q10 22 22 18" stroke={c2} strokeWidth="1.2"/>
+          <path d="M-22 22 Q-8 18 0 22 Q10 26 22 22" stroke={c2} strokeWidth="0.6"/>
+        </g>
+      );
+    }
 
-    // ── Jazz Kissa / Shinjuku bar ─────────────────────────────────────────
-    if (tl.includes('jazz') || tl.includes('kissa') || tl.includes('vinyl')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Vinyl record */}
-        <circle cx="-8" cy="0" r="14" fill={c1} fillOpacity="0.15" stroke={i} strokeWidth="1.2"/>
-        {[5,7,9,11,13].map(r => <circle key={r} cx="-8" cy="0" r={r} stroke={i} strokeWidth="0.4" strokeOpacity="0.5"/>)}
-        <circle cx="-8" cy="0" r="3" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="0.8"/>
-        <circle cx="-8" cy="0" r="1" fill={i} stroke="none"/>
-        {/* Whisky glass */}
-        <path d="M8 -4 L10 12 L18 12 L20 -4Z" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1"/>
-        <line x1="8" y1="-4" x2="20" y2="-4" stroke={i} strokeWidth="0.8"/>
-        <line x1="9" y1="3" x2="19" y2="3" stroke={i} strokeWidth="0.5" strokeOpacity="0.6"/>
-        {/* Ice cubes */}
-        <rect x="10" y="1" width="4" height="4" rx="0.5" fill="white" fillOpacity="0.6" stroke={i} strokeWidth="0.5"/>
-        <rect x="15" y="3" width="3" height="3" rx="0.5" fill="white" fillOpacity="0.6" stroke={i} strokeWidth="0.5"/>
-        {/* Music note */}
-        <path d="M6 -12 L6 -18 L14 -20 L14 -14" stroke={c3} strokeWidth="1.1"/>
-        <ellipse cx="5" cy="-11" rx="2.5" ry="2" fill={c3} fillOpacity="0.6" stroke={c3} strokeWidth="0.5" transform="rotate(-20,5,-11)"/>
-        <ellipse cx="13" cy="-13" rx="2.5" ry="2" fill={c3} fillOpacity="0.6" stroke={c3} strokeWidth="0.5" transform="rotate(-20,13,-13)"/>
-      </g>
-    );
+    // ── 7. Hyatt Regency Kyoto (Higashiyama Zen Hotel) ─────────────────────────
+    if (tl.includes('hyatt regency') || (tl.includes('hyatt') && tl.includes('kyoto'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Japanese cedar slat facade */}
+          <rect x="-18" y="-4" width="36" height="20" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          <path d="M-20 -4 L0 -14 L20 -4" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
+          {/* Vertical cedar lattice work */}
+          {[-14, -10, -6, -2, 2, 6, 10, 14].map(lx => (
+            <line key={lx} x1={lx} y1="-2" x2={lx} y2="14" stroke={f} strokeWidth="0.6"/>
+          ))}
+          {/* Zen garden rock & bamboo base */}
+          <ellipse cx="-8" cy="18" rx="4" ry="2.5" fill={f} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+          <ellipse cx="6" cy="19" rx="5" ry="2" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
 
-    // ── Omoide Yokocho / yakitori ─────────────────────────────────────────
-    if (tl.includes('omoide') || tl.includes('yokocho') || tl.includes('yakitori')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Narrow alley walls */}
-        <line x1="-14" y1="-18" x2="-14" y2="18" stroke={i} strokeWidth="1"/>
-        <line x1="14" y1="-18" x2="14" y2="18" stroke={i} strokeWidth="1"/>
-        {/* Grill */}
-        <rect x="-12" y="6" width="24" height="10" rx="0.5" fill={c3} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
-        {[-8,-3,2,7].map(gx => <line key={gx} x1={gx} y1="6" x2={gx} y2="16" stroke={i} strokeWidth="0.6"/>)}
-        {/* Yakitori skewers */}
-        {[-6,0,6].map(sx2 => (
-          <g key={sx2}>
-            <line x1={sx2} y1="-16" x2={sx2} y2="10" stroke={i} strokeWidth="0.9"/>
-            {[-10,-5,0].map(sy2 => (
-              <ellipse key={sy2} cx={sx2} cy={sy2} rx="3" ry="2.5" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="0.6"/>
-            ))}
-          </g>
-        ))}
-        {/* Smoke */}
-        <path d="M-6 -16 Q-8 -22 -6 -28" stroke={f} strokeWidth="0.7"/>
-        <path d="M6 -16 Q8 -22 6 -28" stroke={f} strokeWidth="0.7"/>
-        {/* Lanterns */}
-        <ellipse cx="-10" cy="-14" rx="3" ry="5" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="10" cy="-14" rx="3" ry="5" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 8. High-End Ginza Sushi Counter (Saito, Sawada, Harutaka) ─────────────
+    if (tl.includes('sushi') || tl.includes('saito') || tl.includes('sawada') || tl.includes('harutaka') || tl.includes('nigiri')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Hinoki wooden sushi counter */}
+          <rect x="-20" y="8" width="40" height="6" rx="0.5" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.1"/>
+          {/* O-toro Nigiri sushi on geta block */}
+          <ellipse cx="-2" cy="0" rx="10" ry="5.5" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="1.1"/>
+          {/* Rice base underneath */}
+          <path d="M-10 1 Q-2 6 6 1" stroke={i} strokeWidth="0.8" strokeDasharray="2,1.5"/>
+          {/* Shoyu glaze brush stroke */}
+          <path d="M-6 -2 Q0 -4 6 -2" stroke={c3} strokeWidth="1.2"/>
+          {/* Wasabi leaf / garnish */}
+          <path d="M12 -2 Q15 -7 18 -4 Q16 0 12 -2 Z" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="0.7"/>
+          {/* Chopsticks resting */}
+          <line x1="-16" y1="4" x2="16" y2="4" stroke={i} strokeWidth="1.2"/>
+        </g>
+      );
+    }
 
-    // ── Tokyo Station (brick dome) ────────────────────────────────────────
-    if (tl.includes('tokyo station')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Classic red-brick facade */}
-        <rect x="-18" y="-4" width="36" height="22" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.2"/>
-        {/* Central dome */}
-        <path d="M-6 -4 Q0 -16 6 -4" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
-        {/* Side domes */}
-        <path d="M-18 -4 Q-14 -12 -10 -4" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="0.9"/>
-        <path d="M10 -4 Q14 -12 18 -4" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="0.9"/>
-        {/* Arched windows */}
-        {[-12,-4,4,12].map(wx => (
-          <path key={wx} d={`M${wx-3} 14 L${wx-3} 6 Q${wx} 3 ${wx+3} 6 L${wx+3} 14`}
-            fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
-        ))}
-        {/* Brick texture lines */}
-        {[0,4,8,12].map(ry => <line key={ry} x1="-18" y1={ry} x2="18" y2={ry} stroke={f} strokeWidth="0.4"/>)}
-        {/* Platform */}
-        <line x1="-20" y1="18" x2="20" y2="18" stroke={i} strokeWidth="1"/>
-        <line x1="-18" y1="20" x2="18" y2="20" stroke={f} strokeWidth="0.5"/>
-      </g>
-    );
+    // ── 9. Studio Ghibli Museum (Totoro & Miyazaki Art) ───────────────────────
+    if (tl.includes('ghibli') || tl.includes('mitaka') || tl.includes('miyazaki') || tl.includes('totoro')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Totoro / Ghibli silhouette */}
+          <ellipse cx="0" cy="4" rx="13" ry="15" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.3"/>
+          {/* Pointed ears */}
+          <path d="M-8 -9 L-11 -21 L-4 -12" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
+          <path d="M8 -9 L11 -21 L4 -12" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
+          {/* Expressive eyes */}
+          <circle cx="-5" cy="-1" r="3" fill="white" stroke={i} strokeWidth="0.9"/>
+          <circle cx="5" cy="-1" r="3" fill="white" stroke={i} strokeWidth="0.9"/>
+          <circle cx="-4" cy="-1" r="1.3" fill={i} stroke="none"/>
+          <circle cx="6" cy="-1" r="1.3" fill={i} stroke="none"/>
+          {/* Whiskers */}
+          <line x1="-12" y1="2" x2="-19" y2="1" stroke={i} strokeWidth="0.8"/>
+          <line x1="-12" y1="5" x2="-19" y2="7" stroke={i} strokeWidth="0.8"/>
+          <line x1="12" y1="2" x2="19" y2="1" stroke={i} strokeWidth="0.8"/>
+          <line x1="12" y1="5" x2="19" y2="7" stroke={i} strokeWidth="0.8"/>
+          {/* Belly marks */}
+          <path d="M-4 10 Q0 8 4 10" stroke={i} strokeWidth="1"/>
+          <path d="M-6 13 Q0 11 6 13" stroke={i} strokeWidth="0.9"/>
+        </g>
+      );
+    }
 
-    // ── Asaba Ryokan ──────────────────────────────────────────────────────
-    if (tl.includes('asaba') || (tl.includes('ryokan') && tl.includes('shuzenji'))) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Main building */}
-        <rect x="-16" y="-4" width="32" height="16" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        <path d="M-18 -4 L0 -16 L18 -4" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <path d="M-20 -8 L0 -20 L20 -8" stroke={f} strokeWidth="0.8"/>
-        {/* Shoji screens */}
-        {[-10,-2,6].map(wx => (
-          <g key={wx}>
-            <rect x={wx} y="-2" width="6" height="10" rx="0.3" stroke={i} strokeWidth="0.7"/>
-            <line x1={wx+3} y1="-2" x2={wx+3} y2="8" stroke={f} strokeWidth="0.4"/>
-            <line x1={wx} y1="3" x2={wx+6} y2="3" stroke={f} strokeWidth="0.4"/>
-          </g>
-        ))}
-        {/* Katsura River under stilts */}
-        <line x1="-16" y1="12" x2="-16" y2="20" stroke={i} strokeWidth="0.8"/>
-        <line x1="0" y1="12" x2="0" y2="20" stroke={i} strokeWidth="0.8"/>
-        <line x1="16" y1="12" x2="16" y2="20" stroke={i} strokeWidth="0.8"/>
-        <path d="M-22 20 Q-10 17 0 20 Q10 23 22 20" stroke={c2} strokeWidth="1.1"/>
-        <path d="M-22 23 Q-10 21 0 23 Q10 25 22 23" stroke={c2} strokeWidth="0.6"/>
-      </g>
-    );
+    // ── 10. Meiji Jingu Gyoen (Iris Gardens & Giant Torii) ────────────────────
+    if (tl.includes('meiji') || tl.includes('jingu') || tl.includes('gyoen')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Grand wooden Torii Gate */}
+          <line x1="-16" y1="16" x2="-16" y2="-10" stroke={c1} strokeWidth="2.2"/>
+          <line x1="16" y1="16" x2="16" y2="-10" stroke={c1} strokeWidth="2.2"/>
+          <line x1="-20" y1="-8" x2="20" y2="-8" stroke={c1} strokeWidth="2.4"/>
+          <line x1="-17" y1="-4" x2="17" y2="-4" stroke={c1} strokeWidth="1.4"/>
+          {/* Blooming Iris flowers around pond */}
+          {[-8, 0, 8].map((ix, idx) => (
+            <g key={ix} transform={`translate(${ix},${4 + (idx % 2) * 3})`}>
+              <line x1="0" y1="10" x2="0" y2="0" stroke={c2} strokeWidth="1"/>
+              <ellipse cx="0" cy="-2" rx="3.5" ry="5" fill={c3} fillOpacity="0.65" stroke={i} strokeWidth="0.7"/>
+            </g>
+          ))}
+          {/* Pond water */}
+          <path d="M-22 17 Q-10 14 0 17 Q10 20 22 17" stroke={c2} strokeWidth="1.1"/>
+        </g>
+      );
+    }
 
-    // ── Shuzenji Bamboo Forest / Temple ───────────────────────────────────
-    if (tl.includes('shuzenji') || tl.includes('bamboo forest')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Bamboo stalks */}
-        {[-14,-6,2,10,18].map((ox,oi) => (
-          <g key={ox}>
-            <rect x={ox} y={-18 + oi%2*4} width="5" height="34" rx="2.5"
-              fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-            {[-10,-2,6,14].map(oy => <line key={oy} x1={ox} y1={oy} x2={ox+5} y2={oy} stroke={i} strokeWidth="0.5"/>)}
-          </g>
-        ))}
-        {/* Temple gate in background */}
-        <line x1="-4" y1="16" x2="-4" y2="-2" stroke={c3} strokeWidth="1.5"/>
-        <line x1="4" y1="16" x2="4" y2="-2" stroke={c3} strokeWidth="1.5"/>
-        <path d="M-7 -1 Q0 -6 7 -1" stroke={c3} strokeWidth="1.8"/>
-        <path d="M-5 2 Q0 -1 5 2" stroke={c3} strokeWidth="1.1"/>
-      </g>
-    );
+    // ── 11. Yurakucho & Omoide Yokocho (Yakitori Alley under Tracks) ───────────
+    if (tl.includes('yurakucho') || tl.includes('omoide') || tl.includes('yokocho') || tl.includes('yakitori')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Elevated railway brick arch */}
+          <path d="M-20 -4 Q0 -16 20 -4 L20 18 L-20 18 Z" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.2"/>
+          <path d="M-14 18 L-14 4 Q0 -4 14 4 L14 18" stroke={i} strokeWidth="1.1"/>
+          {/* Skewered Yakitori */}
+          {[-6, 0, 6].map(sk => (
+            <g key={sk}>
+              <line x1={sk} y1="-14" x2={sk} y2="12" stroke={i} strokeWidth="0.9"/>
+              {[-8, -3, 2].map(sy => (
+                <ellipse key={sy} cx={sk} cy={sy} rx="3" ry="2.2" fill={c2} fillOpacity="0.7" stroke={i} strokeWidth="0.6"/>
+              ))}
+            </g>
+          ))}
+          {/* Binchotan charcoal smoke curls */}
+          <path d="M-4 -14 Q-8 -22 -4 -28" stroke={f} strokeWidth="0.8"/>
+          <path d="M4 -14 Q8 -22 4 -28" stroke={f} strokeWidth="0.8"/>
+          {/* Red izakaya lantern */}
+          <ellipse cx="-15" cy="-2" rx="3.5" ry="5.5" fill={c3} fillOpacity="0.7" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Kaiseki & Noh Stage ───────────────────────────────────────────────
-    if (tl.includes('kaiseki') || tl.includes('noh')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Noh mask */}
-        <path d="M-8 -18 Q-10 -8 -8 2 Q0 8 8 2 Q10 -8 8 -18 Q0 -22 -8 -18Z"
-          fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <ellipse cx="-3" cy="-8" rx="2.5" ry="3" fill={i} fillOpacity="0.6" stroke="none"/>
-        <ellipse cx="3" cy="-8" rx="2.5" ry="3" fill={i} fillOpacity="0.6" stroke="none"/>
-        <path d="M-4 -1 Q0 2 4 -1" stroke={i} strokeWidth="0.9"/>
-        <path d="M-6 -14 Q0 -16 6 -14" stroke={f} strokeWidth="0.6"/>
-        {/* Floating stage */}
-        <rect x="-16" y="10" width="32" height="6" rx="0.5" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-        {[-12,-4,4,12].map(sx2 => <line key={sx2} x1={sx2} y1="16" x2={sx2} y2="24" stroke={i} strokeWidth="0.8"/>)}
-        {/* Torches */}
-        {[-14, 14].map(tx => (
-          <g key={tx}>
-            <line x1={tx} y1="8" x2={tx} y2="-2" stroke={i} strokeWidth="0.9"/>
-            <path d={`M${tx-3} -4 Q${tx} -10 ${tx+3} -4 Q${tx} -1 ${tx-3} -4`}
-              fill={c3} fillOpacity="0.8" stroke={c3} strokeWidth="0.5"/>
-          </g>
-        ))}
-      </g>
-    );
+    // ── 12. Bar High Five Ginza (Ueno's Signature Diamond Cocktail) ───────────
+    if (tl.includes('high five') || tl.includes('cocktail') || (tl.includes('bar') && tl.includes('ginza'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Elegant crystal cocktail coupe */}
+          <path d="M-15 -6 Q0 8 15 -6 Z" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          <line x1="-15" y1="-6" x2="15" y2="-6" stroke={i} strokeWidth="0.8"/>
+          {/* Thin stem & base */}
+          <line x1="0" y1="5" x2="0" y2="18" stroke={i} strokeWidth="1.3"/>
+          <ellipse cx="0" cy="18" rx="8" ry="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
+          {/* Hand-carved ice diamond sphere */}
+          <polygon points="0,-12 5,-7 0,-2 -5,-7" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.8"/>
+          {/* Citrus twist peel */}
+          <path d="M12 -8 Q18 -12 14 -4" stroke={c1} strokeWidth="1.2"/>
+        </g>
+      );
+    }
 
-    // ── Hakone Tozan Railway ──────────────────────────────────────────────
-    if (tl.includes('tozan') || tl.includes('hakone') && tl.includes('railway')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Mountain track zig-zagging */}
-        <path d="M-18 18 L-6 4 L6 12 L18 -4 L22 -10" stroke={c2} strokeWidth="1.8"/>
-        <path d="M-16 18 L-4 4 L8 12 L20 -4 L24 -10" stroke={c2} strokeWidth="1"/>
-        {/* Train car on track */}
-        <rect x="-4" y="2" width="14" height="8" rx="1.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.1"
-          transform="rotate(-25,-4,2)"/>
-        <rect x="-2" y="3" width="4" height="3" rx="0.5" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.6"
-          transform="rotate(-25,-2,3)"/>
-        {/* Tunnel entrance */}
-        <path d="M14 -2 Q18 -8 22 -2 L22 6 L14 6Z" fill={f} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        {/* Forest */}
-        {[-18,-12,16].map(px => (
-          <path key={px} d={`M${px+4} 18 L${px} 8 L${px+8} 8Z`}
-            fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-        ))}
-      </g>
-    );
+    // ── 13. Arashio Stable Sumo Morning Practice (Yokozuna & Dohyo) ───────────
+    if (tl.includes('sumo') || tl.includes('arashio') || tl.includes('stable')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Circular Sand Dohyo Ring */}
+          <ellipse cx="0" cy="10" rx="18" ry="8" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.3"/>
+          <ellipse cx="0" cy="10" rx="14" ry="5.5" stroke={f} strokeWidth="0.7" strokeDasharray="3,2"/>
+          {/* Yokozuna Torso & Mawashi belt */}
+          <path d="M-8 4 Q-12 -6 -8 -14 Q0 -16 8 -14 Q12 -6 8 4 Z" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Topknot (Chonmage) */}
+          <ellipse cx="0" cy="-17" rx="3.5" ry="3" fill={i} stroke="none"/>
+          <path d="M-2 -19 Q0 -24 2 -19" stroke={i} strokeWidth="1.2"/>
+          {/* Thick Mawashi belt & shimenawa rope */}
+          <rect x="-9" y="-2" width="18" height="6" rx="1" fill={c3} fillOpacity="0.7" stroke={i} strokeWidth="1"/>
+          {/* Salt purification toss */}
+          {[-6, -2, 3, 7].map(sx => <circle key={sx} cx={sx + 4} cy={-10 + sx} r="0.9" fill="white" stroke={i} strokeWidth="0.4"/>)}
+        </g>
+      );
+    }
 
-    // ── Gora Kadan Onsen ──────────────────────────────────────────────────
-    if (tl.includes('gora') || tl.includes('onsen') || tl.includes('imperial onsen')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Outdoor onsen pool */}
-        <ellipse cx="0" cy="8" rx="16" ry="8" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <ellipse cx="0" cy="8" rx="12" ry="5" stroke={i} strokeWidth="0.5" strokeDasharray="2,2"/>
-        {/* Steam */}
-        {[-8,-2,4,10].map(sx2 => (
-          <path key={sx2} d={`M${sx2} 4 Q${sx2-3} -3 ${sx2} -10`} stroke={f} strokeWidth="0.9"/>
-        ))}
-        {/* Bamboo fence */}
-        {[-18,-12,-6,12,18].map(bx => (
-          <line key={bx} x1={bx} y1="16" x2={bx} y2="-2" stroke={c1} strokeWidth="1.4"/>
-        ))}
-        <line x1="-18" y1="4" x2="20" y2="4" stroke={c1} strokeWidth="0.8"/>
-        {/* Fuji */}
-        <path d="M6 -18 L14 -32 L22 -18" fill="white" fillOpacity="0.7" stroke={i} strokeWidth="0.8"/>
-        <path d="M10 -22 Q14 -24 18 -22" stroke={i} strokeWidth="0.6" strokeDasharray="1.5,1"/>
-      </g>
-    );
+    // ── 14. Akihabara Electric Town & Retro Games ──────────────────────────────
+    if (tl.includes('akihabara') || tl.includes('electric town') || tl.includes('super potato')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Retro Game Boy / Handheld */}
+          <rect x="-12" y="-18" width="24" height="36" rx="3" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
+          {/* Dot matrix screen */}
+          <rect x="-8" y="-14" width="16" height="13" rx="1" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
+          {/* Pixel sprite in screen */}
+          <rect x="-3" y="-9" width="6" height="4" rx="0.5" fill={i} stroke="none"/>
+          {/* D-pad */}
+          <line x1="-7" y1="6" x2="-1" y2="6" stroke={i} strokeWidth="2.2"/>
+          <line x1="-4" y1="3" x2="-4" y2="9" stroke={i} strokeWidth="2.2"/>
+          {/* A & B buttons */}
+          <circle cx="4" cy="7" r="1.8" fill={c3} stroke={i} strokeWidth="0.6"/>
+          <circle cx="7" cy="4" r="1.8" fill={c3} stroke={i} strokeWidth="0.6"/>
+        </g>
+      );
+    }
 
-    // ── Open-Air Museum / Sculpture ───────────────────────────────────────
-    if (tl.includes('open-air') || tl.includes('open air') || (tl.includes('museum') && tl.includes('hakone'))) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Abstract sculptures */}
-        {/* Tall curved form */}
-        <path d="M-12 16 Q-14 6 -10 -2 Q-6 -12 -2 -8 Q2 -4 0 6 Q-2 14 -2 16"
-          fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
-        {/* Sphere */}
-        <circle cx="8" cy="-2" r="8" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
-        <ellipse cx="8" cy="-2" rx="8" ry="3" stroke={f} strokeWidth="0.5"/>
-        {/* Pedestal */}
-        <rect x="-14" y="16" width="12" height="5" rx="0.5" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        <rect x="3" y="6" width="12" height="5" rx="0.5" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        {/* Mountain horizon */}
-        <path d="M-22 22 L-16 14 L-10 18 L-2 10 L6 16 L12 8 L20 14 L24 22" stroke={f} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 15. GIGO Akihabara Arcade (UFO Catcher & Taiko) ────────────────────────
+    if (tl.includes('gigo') || tl.includes('arcade') || tl.includes('crane')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Crane / UFO Catcher Claw */}
+          <line x1="0" y1="-22" x2="0" y2="-12" stroke={i} strokeWidth="1.5"/>
+          <circle cx="0" cy="-10" r="3" fill={c1} stroke={i} strokeWidth="1"/>
+          {/* 3 Prongs */}
+          <path d="M-3 -9 Q-10 -4 -8 2" stroke={i} strokeWidth="1.2"/>
+          <path d="M3 -9 Q10 -4 8 2" stroke={i} strokeWidth="1.2"/>
+          {/* Prize plush / sphere */}
+          <circle cx="0" cy="8" rx="8" ry="8" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1.1"/>
+          {/* Arcade cabinet glow */}
+          <rect x="-16" y="-18" width="32" height="36" rx="2" stroke={f} strokeWidth="0.8" strokeDasharray="3,2"/>
+        </g>
+      );
+    }
 
-    // ── Owakudani Ropeway ─────────────────────────────────────────────────
-    if (tl.includes('owakudani') || tl.includes('ropeway')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Cable */}
-        <path d="M-22 -8 Q0 -16 22 -8" stroke={i} strokeWidth="1.4"/>
-        {/* Gondola */}
-        <rect x="-8" y="-16" width="16" height="12" rx="2" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
-        <rect x="-5" y="-14" width="4" height="5" rx="0.5" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.6"/>
-        <rect x="1" y="-14" width="4" height="5" rx="0.5" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.6"/>
-        <line x1="0" y1="-16" x2="0" y2="-12" stroke={i} strokeWidth="0.8"/>
-        {/* Pulley wheel */}
-        <circle cx="0" cy="-18" r="3" stroke={i} strokeWidth="0.9"/>
-        {/* Volcanic vents below */}
-        <path d="M-18 18 Q-12 10 -8 12 Q-4 6 0 8 Q4 2 8 6 Q12 0 18 4" stroke={i} strokeWidth="1"/>
-        {[-10,-2,6,14].map(vx2 => (
-          <path key={vx2} d={`M${vx2} ${vx2%4===0?12:8} Q${vx2-2} ${vx2%4===0?4:-2} ${vx2} ${vx2%4===0?-4:-8}`}
-            stroke={c3} strokeWidth="0.9"/>
-        ))}
-      </g>
-    );
+    // ── 16. Kanda Yabu Soba (Slate Buckwheat Noodles & Tokkuri) ────────────────
+    if (tl.includes('soba') || tl.includes('yabu') || tl.includes('kanda')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Square bamboo seiro steamer tray */}
+          <rect x="-15" y="0" width="30" height="16" rx="1" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
+          {/* Slate buckwheat noodles mound */}
+          <ellipse cx="0" cy="4" rx="12" ry="7" fill={c2} fillOpacity="0.45" stroke={i} strokeWidth="0.9"/>
+          {[-8, -3, 2, 7].map(nx => <path key={nx} d={`M${nx} 1 Q${nx + 2} 7 ${nx + 4} 3`} stroke={i} strokeWidth="0.7"/>)}
+          {/* Tokkuri dipping sauce flask & cup */}
+          <path d="M12 -12 Q10 -16 13 -18 L17 -18 Q20 -16 18 -12 Q21 -8 19 -3 Q16 1 12 -3 Z" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.8"/>
+          {/* Chopsticks */}
+          <line x1="-18" y1="-8" x2="2" y2="12" stroke={i} strokeWidth="1.1"/>
+        </g>
+      );
+    }
 
-    // ── Biwako Express ────────────────────────────────────────────────────
-    if (tl.includes('biwako') || tl.includes('lakeside express')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Train */}
-        <rect x="-18" y="-10" width="36" height="14" rx="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <path d="-18 -10 L-12 -16 L16 -16 L18 -10" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        {[-10,-2,6,14].map(wx => <rect key={wx} x={wx} y="-8" width="6" height="5" rx="0.5"
-          fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.6"/>)}
-        {/* Lake visible through window */}
-        <path d="M-2 -7 Q2 -9 6 -7 Q4 -4 0 -4 Q-2 -5 -2 -7Z" fill={c2} fillOpacity="0.5" stroke="none"/>
-        {/* Rails */}
-        <line x1="-22" y1="4" x2="22" y2="4" stroke={i} strokeWidth="1.2"/>
-        <line x1="-22" y1="6" x2="22" y2="6" stroke={i} strokeWidth="1.2"/>
-        {[-18,-10,-2,6,14].map(tx => <line key={tx} x1={tx} y1="4" x2={tx} y2="6" stroke={i} strokeWidth="1"/>)}
-        {/* Lake */}
-        <path d="M-22 14 Q-8 10 0 14 Q10 18 22 14" stroke={c2} strokeWidth="1.1"/>
-        <path d="M-22 18 Q-8 15 0 18 Q10 21 22 18" stroke={c2} strokeWidth="0.6"/>
-      </g>
-    );
+    // ── 17. Kappabashi Knife Street (Artisan Damascus Blades) ──────────────────
+    if (tl.includes('knife') || tl.includes('kappabashi')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Santoku knife blade with Damascus ripples */}
+          <path d="M-18 4 L12 -8 Q20 -10 20 -4 Q18 2 12 3 L-18 8 Z" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          <path d="M-10 1 Q-4 -2 2 0 Q8 2 14 -3" stroke={f} strokeWidth="0.5"/>
+          <path d="M-12 4 Q-6 2 0 3 Q6 5 12 0" stroke={f} strokeWidth="0.5"/>
+          {/* Traditional wooden handle & rivets */}
+          <rect x="-20" y="2" width="10" height="8" rx="1.5" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="1"/>
+          {[-17, -14, -11].map(rx => <circle key={rx} cx={rx} cy="6" r="0.8" fill={i} stroke="none"/>)}
+          {/* Whetstone base */}
+          <rect x="-14" y="14" width="28" height="6" rx="0.5" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Lakeside Ryokan ───────────────────────────────────────────────────
-    if (tl.includes('lakeside ryokan')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Ryokan building */}
-        <rect x="-14" y="-6" width="28" height="16" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        <path d="M-16 -6 L0 -18 L16 -6" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        {/* Shoji screens */}
-        {[-10,-2,6].map(wx => <rect key={wx} x={wx} y="-4" width="6" height="12" rx="0.3" stroke={i} strokeWidth="0.7"/>)}
-        {/* Heron on lake shore */}
-        <path d="M18 10 L18 0 L22 -4 M18 0 L15 4" stroke={i} strokeWidth="1"/>
-        <path d="M22 -4 L25 -4" stroke={i} strokeWidth="0.8"/>
-        {/* Reeds */}
-        {[-18,-14].map(rx => (
-          <g key={rx}>
-            <line x1={rx} y1="10" x2={rx} y2="0" stroke={i} strokeWidth="0.9"/>
-            <ellipse cx={rx} cy="0" rx="1.5" ry="4" stroke={i} strokeWidth="0.7"/>
-          </g>
-        ))}
-        {/* Lake */}
-        <path d="M-22 10 Q-8 7 0 10 Q10 13 22 10" stroke={c2} strokeWidth="1.1"/>
-      </g>
-    );
+    // ── 18. Nekorobi Cat Café Asakusa ─────────────────────────────────────────
+    if (tl.includes('cat') || tl.includes('nekorobi') || tl.includes('café') || tl.includes('cafe')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Curled sleeping cat body */}
+          <ellipse cx="0" cy="4" rx="14" ry="10" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          {/* Head & ears */}
+          <circle cx="8" cy="0" r="6" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          <polygon points="6,-5 9,-11 12,-4" fill={c2} stroke={i} strokeWidth="0.8"/>
+          <polygon points="11,-4 14,-10 16,-3" fill={c2} stroke={i} strokeWidth="0.8"/>
+          {/* Sleeping eye arc */}
+          <path d="M8 0 Q10 2 12 0" stroke={i} strokeWidth="0.9"/>
+          {/* Curled tail */}
+          <path d="M-12 6 Q-18 2 -14 -4 Q-10 -4 -10 0" stroke={i} strokeWidth="1.2"/>
+          {/* Whiskers */}
+          <line x1="12" y1="2" x2="18" y2="1" stroke={i} strokeWidth="0.6"/>
+          <line x1="12" y1="4" x2="18" y2="5" stroke={i} strokeWidth="0.6"/>
+        </g>
+      );
+    }
 
-    // ── Suntory Yamazaki Distillery ────────────────────────────────────────
-    if (tl.includes('suntory') || tl.includes('yamazaki') || tl.includes('distillery')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Copper pot stills */}
-        {[-14,4].map(ox => (
-          <g key={ox}>
-            <path d={`M${ox+2} 16 Q${ox-2} 10 ${ox} 4 Q${ox+4} -4 ${ox+8} 0 Q${ox+12} 4 ${ox+10} 10 Q${ox+8} 16 ${ox+6} 16Z`}
-              fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.1"/>
-            <path d={`M${ox+4} 4 Q${ox+8} -2 ${ox+8} -10`} stroke={i} strokeWidth="0.9"/>
-            <path d={`M${ox+8} -10 Q${ox+10} -14 ${ox+16} -12`} stroke={i} strokeWidth="0.8"/>
-          </g>
-        ))}
-        {/* Whisky barrel */}
-        <ellipse cx="14" cy="8" rx="8" ry="10" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.1"/>
-        {[-4,0,4].map(ry => <line key={ry} x1="6" y1={8+ry} x2="22" y2={8+ry} stroke={f} strokeWidth="0.5"/>)}
-        <ellipse cx="14" cy="8" rx="8" ry="3" stroke={i} strokeWidth="0.7"/>
-        {/* Whisky glass */}
-        <path d="M-20 4 L-18 14 L-10 14 L-8 4Z" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <line x1="-20" y1="4" x2="-8" y2="4" stroke={i} strokeWidth="0.7"/>
-        <line x1="-15" y1="14" x2="-13" y2="18" stroke={i} strokeWidth="0.9"/>
-        <line x1="-13" y1="18" x2="-17" y2="18" stroke={i} strokeWidth="0.9"/>
-      </g>
-    );
+    // ── 19. Tempura Daikokuya Asakusa ─────────────────────────────────────────
+    if (tl.includes('tempura') || tl.includes('daikokuya')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Giant Crispy Battered Tiger Prawn */}
+          <path d="M-12 12 Q-4 4 6 -2 Q14 -6 18 -14 Q14 -12 10 -6 Q2 2 -8 10 Z" fill={c1} fillOpacity="0.55" stroke={i} strokeWidth="1.2"/>
+          {/* Prawn tail fan */}
+          <path d="M18 -14 L22 -19 L19 -13 L23 -16" stroke={c3} strokeWidth="1.1"/>
+          {/* Tempura crunchy texture */}
+          {[-6, 0, 6].map(tx => <line key={tx} x1={tx} y1={2 - tx * 0.5} x2={tx + 3} y2={4 - tx * 0.5} stroke={f} strokeWidth="0.5"/>)}
+          {/* Dipping sauce bowl with tensuyu & daikon */}
+          <path d="M-18 8 Q-12 4 -6 8 Q-4 14 -12 14 Q-20 14 -18 8 Z" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
+        </g>
+      );
+    }
 
-    // ── Dotonbori Canal Walk ──────────────────────────────────────────────
-    if (tl.includes('dotonbori')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Glico Running Man */}
-        <circle cx="-12" cy="-18" r="4" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
-        <line x1="-12" y1="-14" x2="-12" y2="-4" stroke={i} strokeWidth="1.2"/>
-        <path d="-12 -10 L-18 -6 M-12 -10 L-6 -6" stroke={i} strokeWidth="1.1"/>
-        <path d="-12 -4 L-16 4 M-12 -4 L-6 2" stroke={i} strokeWidth="1.1"/>
-        {/* Bridge */}
-        <path d="M-22 8 Q0 4 22 8" stroke={i} strokeWidth="1.4"/>
-        {[-16,-8,0,8,16].map(bx => <line key={bx} x1={bx} y1="8" x2={bx} y2="14" stroke={i} strokeWidth="0.8"/>)}
-        {/* Canal with neon reflections */}
-        <path d="M-22 14 Q-8 11 0 14 Q10 17 22 14" stroke={c2} strokeWidth="1.2"/>
-        {[-14,-4,8].map(rx => (
-          <line key={rx} x1={rx} y1="15" x2={rx+4} y2="20" stroke={c1} strokeWidth="0.6" strokeOpacity="0.7"/>
-        ))}
-        {/* Hanging neon signs */}
-        {[0,10].map(sx2 => (
-          <g key={sx2}>
-            <line x1={sx2+4} y1="-14" x2={sx2+4} y2="-6" stroke={f} strokeWidth="0.7"/>
-            <rect x={sx2} y="-6" width="8" height="6" rx="0.5" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.7"/>
-          </g>
-        ))}
-      </g>
-    );
+    // ── 20. Cotton Club Marunouchi (Live Jazz & Brass) ─────────────────────────
+    if (tl.includes('cotton club') || (tl.includes('jazz') && tl.includes('marunouchi'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Brass Saxophone silhouette */}
+          <path d="M-8 -18 L-8 6 Q-8 14 0 14 Q8 14 8 6 L8 -2 Q8 -6 14 -6 Q18 -6 18 0 Q18 8 10 10" stroke={i} strokeWidth="1.3" fill={c1} fillOpacity="0.4"/>
+          {/* Sax horn bell */}
+          <ellipse cx="14" cy="-4" rx="4" ry="7" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="1"/>
+          {/* Musical floating notes */}
+          <path d="M-12 -6 L-12 -14 L-4 -16 L-4 -8" stroke={c3} strokeWidth="1"/>
+          <ellipse cx="-13" cy="-5" rx="2" ry="1.5" fill={c3} stroke="none"/>
+          <ellipse cx="-5" cy="-7" rx="2" ry="1.5" fill={c3} stroke="none"/>
+        </g>
+      );
+    }
 
-    // ── Kushikatsu Counter ────────────────────────────────────────────────
-    if (tl.includes('kushikatsu') || tl.includes('counter') && tl.includes('osaka')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Counter top */}
-        <rect x="-20" y="8" width="40" height="5" rx="0.5" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-        {/* Skewers in holder */}
-        <rect x="-6" y="-8" width="12" height="16" rx="1" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
-        {[-3,0,3,6].map(sx2 => (
-          <g key={sx2}>
-            <line x1={sx2} y1="-18" x2={sx2} y2="8" stroke={i} strokeWidth="0.9"/>
-            <ellipse cx={sx2} cy={-14} rx="2.5" ry="2" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.5"/>
-            <ellipse cx={sx2} cy={-8} rx="2.5" ry="2" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="0.5"/>
-          </g>
-        ))}
-        {/* Sauce pot */}
-        <path d="M10 4 Q8 -2 10 -8 Q14 -10 18 -8 Q20 -2 18 4Z"
-          fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
-        <path d="M10 -2 Q14 -4 18 -2" stroke={f} strokeWidth="0.5"/>
-        <path d="M10 4 L8 4 M18 4 L20 4" stroke={i} strokeWidth="0.8"/>
-        {/* Cabbage */}
-        <path d="M-18 6 Q-16 2 -12 4 Q-10 2 -8 4 Q-10 8 -14 8 Q-18 8 -18 6Z"
-          fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 21. Seiko Museum & Vintage Watches (Komehyo Shinjuku) ─────────────────
+    if (tl.includes('seiko') || tl.includes('watch') || tl.includes('komehyo')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Precision watch case */}
+          <circle cx="0" cy="0" r="14" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.4"/>
+          <circle cx="0" cy="0" r="11" stroke={i} strokeWidth="0.7"/>
+          {/* Hour markers */}
+          {[0, 90, 180, 270].map(a => {
+            const rad = (a * Math.PI) / 180;
+            return (
+              <line key={a} x1={(Math.cos(rad) * 7).toFixed(1)} y1={(Math.sin(rad) * 7).toFixed(1)}
+                x2={(Math.cos(rad) * 10.5).toFixed(1)} y2={(Math.sin(rad) * 10.5).toFixed(1)} stroke={i} strokeWidth="1.4"/>
+            );
+          })}
+          {/* Hands & Tourbillon balance */}
+          <line x1="0" y1="2" x2="0" y2="-7" stroke={i} strokeWidth="1.4"/>
+          <line x1="0" y1="2" x2="5" y2="-2" stroke={i} strokeWidth="1"/>
+          <circle cx="0" cy="4" r="3" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.6"/>
+          {/* Strap brackets */}
+          <rect x="-5" y="-20" width="10" height="6" rx="1" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
+          <rect x="-5" y="14" width="10" height="6" rx="1" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Church of the Light ───────────────────────────────────────────────
-    if (tl.includes('church') || tl.includes('light') && tl.includes('ibaraki')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Concrete wall - Tadao Ando brutalist */}
-        <rect x="-18" y="-20" width="36" height="36" fill={f} fillOpacity="0.15" stroke={i} strokeWidth="1.2"/>
-        {/* Cross of light - glowing */}
-        <rect x="-2" y="-18" width="4" height="32" fill={c1} fillOpacity="0.8" stroke="none"/>
-        <rect x="-14" y="-6" width="28" height="4" fill={c1} fillOpacity="0.8" stroke="none"/>
-        {/* Cross outline */}
-        <rect x="-2" y="-18" width="4" height="32" fill="none" stroke={i} strokeWidth="0.5"/>
-        <rect x="-14" y="-6" width="28" height="4" fill="none" stroke={i} strokeWidth="0.5"/>
-        {/* Light rays */}
-        <path d="-8 -10 L-18 -20" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-        <path d="8 -10 L18 -20" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-        <path d="-10 -4 L-18 2" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-        <path d="10 -4 L18 2" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-      </g>
-    );
+    // ── 22. Rengatei Ginza (Original Omurice & Demi-Glace) ─────────────────────
+    if (tl.includes('omurice') || tl.includes('rengatei')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Oval porcelain serving dish */}
+          <ellipse cx="0" cy="8" rx="18" ry="9" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          {/* Silky Golden Omelette Dome */}
+          <ellipse cx="0" cy="4" rx="13" ry="7.5" fill={c2} fillOpacity="0.65" stroke={i} strokeWidth="1.2"/>
+          {/* Center cut slice */}
+          <path d="M-10 4 Q0 1 10 4" stroke={i} strokeWidth="0.9"/>
+          {/* Rich demi-glace sauce drizzle */}
+          <path d="M-6 0 Q0 -3 6 0 Q10 4 4 8 Q-2 10 -6 0 Z" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="0.8"/>
+          {/* Silver fork */}
+          <line x1="-16" y1="-8" x2="-8" y2="12" stroke={i} strokeWidth="1.1"/>
+        </g>
+      );
+    }
 
-    // ── Umeda Sky Building ────────────────────────────────────────────────
-    if (tl.includes('umeda') || tl.includes('sky building')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Left tower */}
-        <rect x="-18" y="-22" width="10" height="36" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
-        {/* Right tower */}
-        <rect x="8" y="-22" width="10" height="36" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
-        {/* Floating Garden top connector */}
-        <rect x="-20" y="-24" width="40" height="8" rx="2" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1.2"/>
-        {/* Escalator tube in void */}
-        <ellipse cx="0" cy="-8" rx="5" ry="8" fill={c3} fillOpacity="0.25" stroke={i} strokeWidth="0.8"/>
-        {/* Windows */}
-        {[-16,-8,10,18].map(wx => (
-          [0,1,2,3,4].map(wy => (
-            <rect key={`${wx}-${wy}`} x={wx} y={-18+wy*6} width="4" height="4" rx="0.3"
-              fill={c3} fillOpacity={((wx+wy)%3===0)?0.5:0.1} stroke={i} strokeWidth="0.4"/>
-          ))
-        ))}
-      </g>
-    );
+    // ── 23. Yasukuni Shrine & Yushukan (Memorial & Zero Fighter) ──────────────
+    if (tl.includes('yasukuni') || tl.includes('yushukan')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Grand Bronze Torii Gate */}
+          <line x1="-16" y1="16" x2="-16" y2="-2" stroke={i} strokeWidth="1.8"/>
+          <line x1="16" y1="16" x2="16" y2="-2" stroke={i} strokeWidth="1.8"/>
+          <line x1="-20" y1="0" x2="20" y2="0" stroke={i} strokeWidth="2"/>
+          {/* Mitsubishi Zero fighter silhouette above */}
+          <path d="M-10 -14 Q0 -18 10 -14 Q5 -11 0 -11 Q-5 -11 -10 -14 Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          <line x1="0" y1="-20" x2="0" y2="-8" stroke={i} strokeWidth="1.1"/>
+          <circle cx="-4" cy="-14" r="1.5" fill={c3} stroke="none"/>
+          <circle cx="4" cy="-14" r="1.5" fill={c3} stroke="none"/>
+        </g>
+      );
+    }
 
-    // ── Kyoto Station ─────────────────────────────────────────────────────
-    if (tl.includes('kyoto station')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Modern glass grid facade */}
-        {[0,1,2,3,4,5].map(row => [0,1,2,3,4,5,6].map(col => (
-          <rect key={`${row}-${col}`} x={-21+col*7} y={-20+row*7} width="6" height="6" rx="0.3"
-            fill={c2} fillOpacity={((row+col)%3===0)?0.4:0.1} stroke={i} strokeWidth="0.5"/>
-        )))}
-        {/* Roof arch */}
-        <path d="M-22 -20 Q0 -30 22 -20" stroke={i} strokeWidth="1.3"/>
-        {/* Train below */}
-        <rect x="-18" y="22" width="36" height="8" rx="1" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <line x1="-20" y1="30" x2="20" y2="30" stroke={i} strokeWidth="1"/>
-      </g>
-    );
+    // ── 24. Pachinko Parlour Kabukicho ────────────────────────────────────────
+    if (tl.includes('pachinko')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Pachinko frame & pins */}
+          <rect x="-14" y="-18" width="28" height="36" rx="2" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.2"/>
+          {/* Pin grid array */}
+          {[-8, -3, 2, 7].map(px => (
+            [-10, -4, 2, 8].map(py => (
+              <circle key={`${px}-${py}`} cx={px} cy={py} r="0.6" fill={i} stroke="none"/>
+            ))
+          ))}
+          {/* Cascading metallic balls */}
+          {[-6, 0, 5].map((bx, bi) => (
+            <circle key={bx} cx={bx} cy={-12 + bi * 8} r="2" fill={c2} fillOpacity="0.8" stroke={i} strokeWidth="0.6"/>
+          ))}
+          {/* Winning pocket */}
+          <path d="M-4 12 Q0 16 4 12" stroke={c3} strokeWidth="1.5"/>
+        </g>
+      );
+    }
 
-    // ── ROKU KYOTO ────────────────────────────────────────────────────────
-    if (tl.includes('roku')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Low modernist building with overhanging eaves */}
-        <rect x="-18" y="0" width="36" height="14" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        <path d="M-22 0 L0 -10 L22 0" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        <path d="-24 -2 L0 -14 L24 -2" stroke={f} strokeWidth="0.7"/>
-        {/* Shoji panels */}
-        {[-12,-4,4,12].map(wx => (
-          <g key={wx}>
-            <rect x={wx} y="2" width="6" height="10" rx="0.3" stroke={i} strokeWidth="0.6"/>
-            <line x1={wx+3} y1="2" x2={wx+3} y2="12" stroke={f} strokeWidth="0.3"/>
-            <line x1={wx} y1="7" x2={wx+6} y2="7" stroke={f} strokeWidth="0.3"/>
-          </g>
-        ))}
-        {/* Mountain foothills behind */}
-        <path d="M-24 0 L-16 -14 L-8 -6 L0 -18 L8 -8 L16 -14 L24 0" stroke={f} strokeWidth="0.7"/>
-        {/* Stepping stone path */}
-        {[-8,-2,4,10].map(sx2 => <ellipse key={sx2} cx={sx2} cy="18" rx="4" ry="2" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.6"/>)}
-      </g>
-    );
+    // ── 25. Kabukicho & Golden Gai (Neon & Tiny 6-Seat Bars) ───────────────────
+    if (tl.includes('kabukicho') || tl.includes('golden gai')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Iconic Kabukicho red gateway arch */}
+          <rect x="-16" y="-16" width="32" height="24" rx="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.3"/>
+          <rect x="-12" y="-12" width="24" height="16" rx="1" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+          {/* Golden Gai narrow bar doorway */}
+          <rect x="-10" y="6" width="8" height="14" rx="0.5" stroke={i} strokeWidth="1"/>
+          <rect x="2" y="6" width="8" height="14" rx="0.5" stroke={i} strokeWidth="1"/>
+          {/* Glowing lantern */}
+          <ellipse cx="0" cy="0" rx="3" ry="5" fill={c3} fillOpacity="0.8" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Ryoan-ji Zen Garden ───────────────────────────────────────────────
-    if (tl.includes('ryoan') || tl.includes('zen garden')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Raked sand - horizontal lines */}
-        {[-14,-8,-2,4,10,16].map(ly => (
-          <path key={ly} d={`M-22 ${ly} Q-10 ${ly-2} 0 ${ly} Q10 ${ly+2} 22 ${ly}`}
-            stroke={f} strokeWidth="0.7"/>
-        ))}
-        {/* 5 stone groups (Ryoan-ji has 15 in 5 groups) */}
-        {/* Stones */}
-        {[[-14,2],[-4,-6],[4,0],[12,-4],[18,6]].map(([sx2,sy2]) => (
-          <g key={sx2}>
-            <ellipse cx={sx2} cy={sy2} rx={3+Math.abs(sx2)%2} ry={2.5}
-              fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1"/>
-            {/* Sand ripples around each stone */}
-            <path d={`M${(sx2 as number)-6} ${(sy2 as number)+3} Q${sx2} ${(sy2 as number)+5} ${(sx2 as number)+6} ${(sy2 as number)+3}`}
-              stroke={f} strokeWidth="0.5"/>
-          </g>
-        ))}
-        {/* Garden wall */}
-        <rect x="-22" y="-18" width="44" height="4" rx="0" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 26. Nezu Museum Gardens (Bamboo Path & Irises) ────────────────────────
+    if (tl.includes('nezu')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Bamboo wall & strolling path */}
+          {[-16, -10, 10, 16].map(bx => (
+            <g key={bx}>
+              <line x1={bx} y1="-16" x2={bx} y2="16" stroke={c2} strokeWidth="1.6"/>
+              {[-8, 0, 8].map(by => <line key={by} x1={bx - 2} y1={by} x2={bx + 2} y2={by} stroke={i} strokeWidth="0.6"/>)}
+            </g>
+          ))}
+          {/* Traditional stone garden lantern (Ishidoro) */}
+          <rect x="-4" y="-8" width="8" height="6" rx="0.5" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="1"/>
+          <path d="M-6 -8 L0 -14 L6 -8 Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          <rect x="-2" y="-2" width="4" height="16" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
+          {/* Stepping stone path */}
+          <ellipse cx="0" cy="18" rx="6" ry="2.5" fill={f} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Kinkaku-ji Golden Pavilion ─────────────────────────────────────────
-    if (tl.includes('kinkaku') || tl.includes('golden pavilion')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Golden pavilion - 3 tiers */}
-        <rect x="-14" y="4" width="28" height="10" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="1.1"/>
-        <rect x="-11" y="-6" width="22" height="11" fill={c1} fillOpacity="0.65" stroke={i} strokeWidth="1"/>
-        <rect x="-8" y="-14" width="16" height="9" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="0.9"/>
-        {/* Roofs */}
-        <path d="-16 4 L0 -2 L16 4" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1"/>
-        <path d="-13 -6 L0 -12 L13 -6" fill={c2} fillOpacity="0.45" stroke={i} strokeWidth="0.9"/>
-        <path d="-10 -14 L0 -20 L10 -14" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        <line x1="0" y1="-22" x2="0" y2="-20" stroke={i} strokeWidth="0.8"/>
-        {/* Reflection in pond */}
-        <path d="M-14 14 Q0 17 14 14" stroke={c1} strokeWidth="0.8" strokeOpacity="0.6"/>
-        <path d="M-11 17 Q0 20 11 17" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-        <path d="-8 20 Q0 22 8 20" stroke={c1} strokeWidth="0.4" strokeOpacity="0.4"/>
-        {/* Pond ripple */}
-        <path d="M-20 14 Q0 11 20 14" stroke={c3} strokeWidth="0.9"/>
-      </g>
-    );
+    // ── 27. Shibuya Scramble Crossing ─────────────────────────────────────────
+    if (tl.includes('shibuya') || tl.includes('scramble')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Diagonal pedestrian zebra crossing stripes */}
+          {[-12, -6, 0, 6, 12].map(lx => (
+            <line key={lx} x1={lx - 6} y1="-12" x2={lx + 6} y2="16" stroke={c2} strokeWidth="2.8" strokeOpacity="0.6"/>
+          ))}
+          {/* Bustling crowd dots */}
+          {[[-8, -2], [-2, 4], [4, -4], [8, 6], [0, 12]].map(([cx, cy], ci) => (
+            <circle key={ci} cx={cx} cy={cy} r="1.8" fill={c1} stroke={i} strokeWidth="0.6"/>
+          ))}
+          {/* Towering neon billboards */}
+          <rect x="-18" y="-20" width="8" height="16" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+          <rect x="10" y="-22" width="9" height="18" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Ginkaku-ji Silver Pavilion ─────────────────────────────────────────
-    if (tl.includes('ginkaku') || tl.includes('silver pavilion')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Silver pavilion - 2 tiers, darker/gray */}
-        <rect x="-12" y="2" width="24" height="12" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
-        <rect x="-9" y="-7" width="18" height="10" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
-        <path d="-14 2 L0 -4 L14 2" stroke={i} strokeWidth="1.1"/>
-        <path d="-11 -7 L0 -13 L11 -7" stroke={i} strokeWidth="0.9"/>
-        <line x1="0" y1="-15" x2="0" y2="-13" stroke={i} strokeWidth="0.7"/>
-        {/* Kogetsudai sand cone */}
-        <path d="M-22 14 L-18 0 L-14 14" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <path d="-20 14 Q-18 7 -16 14" stroke={f} strokeWidth="0.5"/>
-        <path d="-21 10 Q-18 5 -15 10" stroke={f} strokeWidth="0.4"/>
-        {/* Pond */}
-        <path d="M-14 14 Q0 18 14 14" stroke={c3} strokeWidth="0.9"/>
-        <path d="M-10 17 Q0 20 10 17" stroke={c3} strokeWidth="0.5"/>
-      </g>
-    );
+    // ── 28. Nakamura-ya Shinjuku (Historic 1927 Curry) ────────────────────────
+    if (tl.includes('curry') || tl.includes('nakamura')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Classic stainless Aladdin curry gravy boat */}
+          <path d="M-12 4 Q-16 -4 -6 -6 Q6 -8 16 -2 Q20 2 12 6 Q0 8 -12 4 Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Spout pouring aromatic curry */}
+          <path d="M16 -2 Q22 4 18 10" stroke={c3} strokeWidth="1.5"/>
+          {/* Steamed rice mound */}
+          <ellipse cx="-2" cy="12" rx="14" ry="7" fill="white" fillOpacity="0.7" stroke={i} strokeWidth="1"/>
+          {/* Fukujinzuke red pickles */}
+          <ellipse cx="6" cy="10" rx="3" ry="1.5" fill={c2} stroke="none"/>
+        </g>
+      );
+    }
 
-    // ── Philosopher's Path ─────────────────────────────────────────────────
-    if (tl.includes("philosopher")) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Stone path */}
-        {[-14,-8,-2,4,10].map(sx2 => (
-          <ellipse key={sx2} cx={sx2} cy={12+(sx2%6)} rx="5" ry="2.5"
-            fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        ))}
-        {/* Canal alongside */}
-        <path d="M-20 18 Q-8 15 0 18 Q10 21 20 18" stroke={c3} strokeWidth="1.1"/>
-        <path d="M-20 21 Q-8 19 0 21 Q10 23 20 21" stroke={c3} strokeWidth="0.5"/>
-        {/* Cherry trees overhanging */}
-        <path d="M-14 10 L-14 -4 L-22 -14 M-14 -4 L-6 -12" stroke={i} strokeWidth="1.2"/>
-        <path d="M10 8 L10 -6 L18 -16 M10 -6 L2 -14" stroke={i} strokeWidth="1.2"/>
-        {/* Cherry blossoms */}
-        {[[-20,-14],[-6,-12],[18,-16],[2,-14]].map(([bx,by]) => (
-          <g key={bx} transform={`translate(${bx},${by})`}>
-            {[0,72,144,216,288].map(a => (
-              <ellipse key={a} cx={+(Math.cos(a*Math.PI/180)*4).toFixed(1)}
-                cy={+(Math.sin(a*Math.PI/180)*4).toFixed(1)}
-                rx="3" ry="1.8" fill={c1} fillOpacity="0.65" stroke={i} strokeWidth="0.5"
-                transform={`rotate(${a})`}/>
-            ))}
-          </g>
-        ))}
-      </g>
-    );
+    // ── 29. Shinjuku Gyoen National Garden ────────────────────────────────────
+    if (tl.includes('shinjuku gyoen') || (tl.includes('gyoen') && tl.includes('shinjuku'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Traditional teahouse pavilion & wisteria trellis */}
+          <path d="M-16 -4 L0 -14 L16 -4" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
+          <rect x="-12" y="-4" width="24" height="14" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
+          {/* Scenic arched wooden bridge */}
+          <path d="M-18 14 Q0 6 18 14" stroke={c3} strokeWidth="1.8"/>
+          {/* Garden pond reflection & weeping branches */}
+          <path d="M-20 18 Q0 15 20 18" stroke={c2} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Takagamine Tea House ───────────────────────────────────────────────
-    if (tl.includes('takagamine') || tl.includes('tea house') || tl.includes('tea shrine')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Tea house with thatched hip roof */}
-        <rect x="-14" y="0" width="28" height="16" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
-        <path d="-18 0 L0 -16 L18 0" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
-        <path d="-20 -2 L0 -18 L20 -2" stroke={f} strokeWidth="0.7"/>
-        {/* Roji gate */}
-        <line x1="-24" y1="16" x2="-24" y2="0" stroke={i} strokeWidth="1.1"/>
-        <line x1="-20" y1="16" x2="-20" y2="0" stroke={i} strokeWidth="1.1"/>
-        <line x1="-26" y1="2" x2="-18" y2="2" stroke={i} strokeWidth="0.9"/>
-        <path d="-26 1 Q-22 -3 -18 1" stroke={i} strokeWidth="0.7"/>
-        {/* Stepping stones */}
-        {[-12,-4,4,12].map(sx2 => <ellipse key={sx2} cx={sx2} cy="22" rx="4" ry="2" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.6"/>)}
-        {/* Tea bowl in window */}
-        <path d="-4 8 Q0 6 4 8 Q3 12 0 13 Q-3 12 -4 8Z"
-          fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 30. Shinjuku Jazz Kissa & Listening Bar (Vinyl & Whisky) ──────────────
+    if (tl.includes('jazz') || tl.includes('kissa') || tl.includes('vinyl') || tl.includes('listening bar')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Turntable & spinning vinyl LP */}
+          <circle cx="-6" cy="0" r="14" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.3"/>
+          {[5, 8, 11].map(r => <circle key={r} cx="-6" cy="0" r={r} stroke={i} strokeWidth="0.4" strokeOpacity="0.6"/>)}
+          <circle cx="-6" cy="0" r="3" fill={c1} stroke={i} strokeWidth="0.7"/>
+          {/* Turntable tonearm */}
+          <line x1="8" y1="-14" x2="3" y2="4" stroke={i} strokeWidth="1.3"/>
+          <circle cx="8" cy="-14" r="2.5" fill={c2} stroke={i} strokeWidth="0.8"/>
+          {/* Whisky tumbler with spherical ice */}
+          <rect x="10" y="2" width="9" height="12" rx="1" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
+          <circle cx="14.5" cy="8" r="3" fill="white" fillOpacity="0.7" stroke={i} strokeWidth="0.5"/>
+        </g>
+      );
+    }
 
-    // ── Clay-Pot Crab Dinner ───────────────────────────────────────────────
-    if (tl.includes('clay') || tl.includes('crab') || tl.includes('donabe')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Clay pot / donabe */}
-        <path d="M-14 10 Q-16 0 -14 -8 Q-8 -14 0 -14 Q8 -14 14 -8 Q16 0 14 10Z"
-          fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
-        {/* Lid */}
-        <path d="M-12 -10 Q0 -20 12 -10" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
-        <circle cx="0" cy="-20" r="3" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="0.9"/>
-        {/* Steam from lid */}
-        <path d="-4 -20 Q-6 -28 -4 -34" stroke={f} strokeWidth="0.9"/>
-        <path d="2 -20 Q4 -28 2 -34" stroke={f} strokeWidth="0.9"/>
-        {/* Crab claw peeking out */}
-        <path d="M10 -6 Q16 -10 20 -6 Q18 -2 14 -4 Q10 -4 10 -6Z"
-          fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.9"/>
-        <path d="M14 -4 Q18 0 22 -2" stroke={i} strokeWidth="0.8"/>
-        {/* Chopsticks */}
-        <line x1="-18" y1="-12" x2="-6" y2="4" stroke={i} strokeWidth="1.2"/>
-        <line x1="-14" y1="-14" x2="-2" y2="2" stroke={i} strokeWidth="1.2"/>
-      </g>
-    );
+    // ── 31. Gyoza Standing Bar (Pan-Fried with Crispy Skirt) ───────────────────
+    if (tl.includes('gyoza')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Cast iron pan / plate */}
+          <ellipse cx="0" cy="8" rx="18" ry="9" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
+          {/* Row of 3 crispy-bottomed pleated gyoza */}
+          {[-8, 0, 8].map(gx => (
+            <g key={gx}>
+              <path d={`M${gx - 5} 4 Q${gx} -4 ${gx + 5} 4 Q${gx + 3} 9 ${gx - 3} 9 Z`} fill={c2} fillOpacity="0.7" stroke={i} strokeWidth="1"/>
+              {/* Pleats on top */}
+              <line x1={gx - 2} y1="-1" x2={gx - 1} y2="3" stroke={i} strokeWidth="0.6"/>
+              <line x1={gx + 2} y1="-1" x2={gx + 1} y2="3" stroke={i} strokeWidth="0.6"/>
+            </g>
+          ))}
+          {/* Crispy golden lace skirt */}
+          <path d="M-14 8 Q0 12 14 8" stroke={c3} strokeWidth="1.4" strokeDasharray="3,1"/>
+        </g>
+      );
+    }
 
-    // ── Nozomi Shinkansen (Kyoto departure) ────────────────────────────────
-    if (tl.includes('nozomi') || tl.includes('shinkansen') && tl.includes('kyoto')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Shinkansen nose */}
-        <path d="M-4 8 Q-16 8 -18 4 L-18 -4 Q-16 -8 -4 -8 Q4 -8 16 -4 Q20 -2 20 0 Q20 2 16 4 Q4 8 -4 8Z"
-          fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
-        <path d="-4 -8 Q4 -6 16 -2" stroke={f} strokeWidth="0.5"/>
-        {[-8,-2,4,10].map(wx => <rect key={wx} x={wx} y="-5" width="5" height="4" rx="0.5"
-          fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.5"/>)}
-        {/* Speed lines */}
-        {[-6,-2,2,6].map(ly => <line key={ly} x1="-22" y1={ly} x2="-18" y2={ly}
-          stroke={c1} strokeWidth={Math.abs(ly)===6?0.7:1.2}/>)}
-        {/* Rice fields in background */}
-        {[14,18,22].map(ry => <line key={ry} x1="-20" y1={ry} x2="24" y2={ry} stroke={f} strokeWidth="0.5" strokeDasharray="3,2"/>)}
-        {/* Mt. Fuji */}
-        <path d="M12 22 L18 10 L24 22" fill={f} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 32. Hakone Open-Air Museum (Henry Moore Sculptures) ───────────────────
+    if (tl.includes('open-air') || (tl.includes('museum') && tl.includes('hakone'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Monumental abstract sculpture */}
+          <path d="M-12 14 Q-16 2 -10 -6 Q-4 -14 2 -10 Q8 -4 4 6 Q0 14 2 16" fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.3"/>
+          <circle cx="8" cy="-4" r="7" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1"/>
+          {/* Stone pedestal */}
+          <rect x="-14" y="14" width="28" height="5" rx="0.5" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.9"/>
+          {/* Surrounding mountain ridge */}
+          <path d="M-22 18 L-14 10 L-4 14 L8 6 L18 12 L22 18" stroke={f} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Imperial Palace East Gardens ───────────────────────────────────────
-    if (tl.includes('imperial palace') || tl.includes('east gardens')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Stone walls */}
-        <rect x="-20" y="-4" width="40" height="18" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
-        <line x1="-20" y1="2" x2="20" y2="2" stroke={f} strokeWidth="0.5"/>
-        {/* Moat */}
-        <path d="-22 14 Q-8 11 0 14 Q10 17 22 14" stroke={c3} strokeWidth="1.1"/>
-        {/* Stone bridge */}
-        <path d="-6 14 Q0 10 6 14" stroke={i} strokeWidth="1.3"/>
-        <line x1="-6" y1="14" x2="-6" y2="18" stroke={i} strokeWidth="0.9"/>
-        <line x1="6" y1="14" x2="6" y2="18" stroke={i} strokeWidth="0.9"/>
-        {/* Pine trees */}
-        <path d="M-16 -4 L-16 -14 L-24 -8 L-22 -4" stroke={i} strokeWidth="0.8"/>
-        <circle cx="-18" cy="-16" r="5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        <path d="M14 -4 L14 -12 L22 -6 L20 -4" stroke={i} strokeWidth="0.8"/>
-        <circle cx="16" cy="-14" r="5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        {/* Watch tower silhouette */}
-        <rect x="-4" y="-18" width="8" height="14" rx="0.5" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <path d="-6 -18 L0 -24 L6 -18" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 33. Gora Kadan Morning Onsen (Rotenburo Mist) ─────────────────────────
+    if (tl.includes('onsen') || tl.includes('bath') || tl.includes('springs')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Natural stone outdoor onsen bath */}
+          <ellipse cx="0" cy="8" rx="17" ry="8" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.3"/>
+          <ellipse cx="0" cy="8" rx="13" ry="5.5" stroke={f} strokeWidth="0.6" strokeDasharray="2,2"/>
+          {/* Rising hot mineral steam curls */}
+          {[-8, -2, 4, 10].map(sx => (
+            <path key={sx} d={`M${sx} 4 Q${sx - 4} -4 ${sx} -12`} stroke={f} strokeWidth="0.9"/>
+          ))}
+          {/* Cedar wooden bucket & towel */}
+          <rect x="10" y="0" width="7" height="6" rx="0.5" fill={c1} fillOpacity="0.6" stroke={i} strokeWidth="0.8"/>
+          {/* Distant morning mountain */}
+          <path d="M-16 -8 L-8 -18 L0 -8" stroke={f} strokeWidth="0.7"/>
+        </g>
+      );
+    }
 
-    // ── Hyatt / Hotel generic ─────────────────────────────────────────────
-    if (tl.includes('hyatt') || tl.includes('intercontinental') || tl.includes('hotel') || tl.includes('inn')) return (
-      <g fill="none" strokeLinecap="round">
-        <rect x="-10" y="-22" width="20" height="36" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.2"/>
-        {[0,1,2,3,4,5].map(row => [0,1].map(col => (
-          <rect key={`${row}-${col}`} x={-8+col*8} y={-20+row*6} width="5" height="4" rx="0.3"
-            fill={c2} fillOpacity={((row+col+s)%4===0)?0.7:0.15} stroke={i} strokeWidth="0.4"/>
-        )))}
-        <circle cx="0" cy="-26" r="4" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <line x1="-14" y1="14" x2="14" y2="14" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 34. Owakudani Volcanic Vents & Black Eggs (Kuro-tamago) ────────────────
+    if (tl.includes('owakudani') || tl.includes('volcanic')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Volcanic crater ridge */}
+          <path d="M-22 12 Q-12 4 0 8 Q12 0 22 8" stroke={i} strokeWidth="1.2"/>
+          {/* Sulfur steam plumes */}
+          {[-10, 0, 10].map(vx => (
+            <path key={vx} d={`M${vx} 8 Q${vx - 3} 0 ${vx} -8 Q${vx + 3} -16 ${vx} -22`} stroke={c3} strokeWidth="1.1"/>
+          ))}
+          {/* Volcanic black eggs (Kuro-tamago) in wire basket */}
+          {[-5, 0, 5].map((ex, ei) => (
+            <ellipse key={ex} cx={ex} cy={14 - ei * 2} rx="3.5" ry="4.5" fill="#1a1410" stroke={i} strokeWidth="0.8"/>
+          ))}
+          {/* Mt Fuji on horizon */}
+          <path d="M8 -8 L15 -20 L22 -8" fill={f} fillOpacity="0.25" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Default seafood / restaurant ──────────────────────────────────────
-    if (tl.includes('seafood') || tl.includes('happo') || tl.includes('oyster') || tl.includes('crab')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Oyster shells */}
-        {[[-12,-4],[0,0],[10,-6]].map(([ox,oy]) => (
-          <g key={ox} transform={`translate(${ox},${oy})`}>
-            <path d="M0 0 Q-6 -4 -8 -10 Q-2 -14 6 -10 Q10 -4 8 0 Q4 2 0 0Z"
-              fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-            <path d="M0 0 Q2 -6 0 -12" stroke={f} strokeWidth="0.4"/>
-          </g>
-        ))}
-        {/* Snow crab claw */}
-        <path d="M6 8 Q10 4 16 6 Q20 10 18 14 Q14 16 10 14 Q6 12 6 8Z"
-          fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="1"/>
-        <path d="M14 6 Q18 2 22 4" stroke={i} strokeWidth="0.9"/>
-        <path d="M16 8 Q20 6 24 8" stroke={i} strokeWidth="0.8"/>
-        {/* Ice bucket */}
-        <path d="-18 4 L-16 16 L-8 16 L-6 4Z" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <line x1="-18" y1="4" x2="-6" y2="4" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 35. Nakanoshima Riverside Walk Osaka ──────────────────────────────────
+    if (tl.includes('nakanoshima') || (tl.includes('riverside') && tl.includes('osaka'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* River stone arch bridge */}
+          <path d="M-22 6 Q0 -4 22 6" stroke={i} strokeWidth="1.4"/>
+          {[-14, -6, 2, 10, 18].map(bx => <line key={bx} x1={bx} y1="6" x2={bx} y2="12" stroke={i} strokeWidth="0.8"/>)}
+          {/* Flowing river reflections */}
+          <path d="M-22 14 Q-8 11 0 14 Q10 17 22 14" stroke={c2} strokeWidth="1.2"/>
+          <path d="M-22 18 Q-8 15 0 18 Q10 21 22 18" stroke={c2} strokeWidth="0.6"/>
+          {/* Riverside willows & lanterns */}
+          <path d="M-16 4 Q-20 -4 -16 -12" stroke={c1} strokeWidth="1"/>
+        </g>
+      );
+    }
 
-    // ── Golf course ───────────────────────────────────────────────────────
-    if (tl.includes('golf') || tl.includes('kawana')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Rolling fairway */}
-        <path d="M-22 16 Q-10 8 0 12 Q10 16 22 10" stroke={f} strokeWidth="0.9"/>
-        <path d="M-22 20 Q-8 13 0 17 Q10 21 22 15" stroke={f} strokeWidth="0.5"/>
-        {/* Flag on green */}
-        <circle cx="8" cy="8" r="6" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="0.8"/>
-        <line x1="8" y1="8" x2="8" y2="-14" stroke={i} strokeWidth="1.1"/>
-        <path d="M8 -14 L18 -9 L8 -4" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="0.8"/>
-        {/* Golf club */}
-        <line x1="-12" y1="-18" x2="-2" y2="10" stroke={i} strokeWidth="1.2"/>
-        <path d="M-4 8 Q-2 12 2 10 Q0 6 -4 8Z" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-        {/* Ocean horizon */}
-        <line x1="-22" y1="2" x2="22" y2="2" stroke={c3} strokeWidth="0.5" strokeDasharray="3,2"/>
-        <path d="M-22 4 Q-10 2 0 4 Q10 6 22 4" stroke={c3} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 36. Kushikatsu Daruma Shinsekai (No Double Dipping!) ──────────────────
+    if (tl.includes('kushikatsu') || tl.includes('daruma') || tl.includes('shinsekai')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Communal metal sauce vat */}
+          <rect x="2" y="-2" width="16" height="16" rx="1.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          <line x1="4" y1="2" x2="16" y2="2" stroke={f} strokeWidth="0.5"/>
+          {/* Golden breaded skewers */}
+          {[-12, -7, -2].map((kx, ki) => (
+            <g key={kx}>
+              <line x1={kx} y1="-18" x2={kx} y2="10" stroke={i} strokeWidth="1"/>
+              <ellipse cx={kx} cy={-8 + ki * 4} rx="3" ry="4" fill={c2} fillOpacity="0.8" stroke={i} strokeWidth="0.7"/>
+            </g>
+          ))}
+          {/* Raw green cabbage wedge */}
+          <path d="M-18 6 Q-14 0 -8 4 Q-6 10 -12 12 Z" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Senso-ji / Asakusa temple ─────────────────────────────────────────
-    if (tl.includes('senso') || tl.includes('asakusa') || tl.includes('pagoda')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Five-storey pagoda */}
-        {[0,1,2,3,4].map(tier => (
-          <g key={tier}>
-            <rect x={-10+tier*2} y={-20+tier*8} width={20-tier*4} height={7} rx="0.3"
-              fill={c2} fillOpacity="0.25" stroke={i} strokeWidth={tier===0?0.5:0.8}/>
-            <path d={`M${-12+tier*2} ${-20+tier*8} L${0} ${-26+tier*8} L${12-tier*2} ${-20+tier*8}`}
-              fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="0.9"/>
-          </g>
-        ))}
-        <line x1="0" y1="-26" x2="0" y2="-30" stroke={i} strokeWidth="0.8"/>
-        {/* Incense smoke */}
-        <path d="M10 14 Q8 8 10 2" stroke={f} strokeWidth="0.8"/>
-        <path d="M14 14 Q12 8 14 2" stroke={f} strokeWidth="0.6"/>
-        {/* Thunder gate suggestion */}
-        <rect x="-18" y="14" width="36" height="6" rx="0.5" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <path d="M-20 14 L0 8 L20 14" fill={c3} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 37. Rokko Kokusai Golf Club (Kobe Panoramic Course) ───────────────────
+    if (tl.includes('golf') || tl.includes('rokko')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Rolling fairway on mountain ridge */}
+          <path d="M-22 10 Q-8 2 4 6 Q14 10 22 4" stroke={i} strokeWidth="1.2"/>
+          <path d="M-22 16 Q0 10 22 14" stroke={f} strokeWidth="0.7"/>
+          {/* Flagstick & fluttering pin flag */}
+          <line x1="8" y1="-16" x2="8" y2="8" stroke={i} strokeWidth="1.1"/>
+          <polygon points="8,-16 18,-11 8,-6" fill={c1} stroke={i} strokeWidth="0.8"/>
+          {/* Golf ball near hole */}
+          <circle cx="3" cy="7" r="1.8" fill="white" stroke={i} strokeWidth="0.6"/>
+          {/* Driver club */}
+          <line x1="-14" y1="-16" x2="2" y2="7" stroke={i} strokeWidth="1.2"/>
+        </g>
+      );
+    }
 
-    // ── Shibuya / Hamarikyu ───────────────────────────────────────────────
-    if (tl.includes('shibuya') || tl.includes('scramble')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Pedestrian crossing stripes */}
-        {[-10,-4,2,8].map(lx => (
-          <rect key={lx} x={lx} y="-4" width="4" height="22" rx="0.3"
-            fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.5"/>
-        ))}
-        {/* Crowd dots */}
-        {[[-14,18],[-8,20],[-2,18],[4,20],[10,18],[16,20]].map(([px,py]) => (
-          <circle key={px} cx={px} cy={py} r="2" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.4"/>
-        ))}
-        {/* Building silhouettes */}
-        <rect x="-22" y="-20" width="8" height="18" fill={f} fillOpacity="0.2" stroke={i} strokeWidth="0.7"/>
-        <rect x="14" y="-16" width="10" height="14" fill={f} fillOpacity="0.2" stroke={i} strokeWidth="0.7"/>
-        <rect x="-22" y="-24" width="5" height="4" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.5"/>
-      </g>
-    );
+    // ── 38. Kobe Kitano District & Weathercock House ──────────────────────────
+    if (tl.includes('kitano') || tl.includes('nankinmachi')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* European Victorian brick residence (Kazamidori-no-Yakata) */}
+          <rect x="-14" y="-4" width="28" height="20" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          <polygon points="-16,-4 0,-16 16,-4" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Weathercock rooster on spire */}
+          <line x1="0" y1="-16" x2="0" y2="-24" stroke={i} strokeWidth="1"/>
+          <path d="M-3 -22 Q0 -26 4 -22 Q2 -20 0 -22" fill={c3} stroke={i} strokeWidth="0.7"/>
+          {/* Steamed pork bun from Chinatown */}
+          <ellipse cx="12" cy="14" rx="4.5" ry="3" fill="white" fillOpacity="0.8" stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
 
-    // ── Hamarikyu Gardens ─────────────────────────────────────────────────
-    if (tl.includes('hamarikyu') || tl.includes('hama')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Tidal pond */}
-        <ellipse cx="0" cy="10" rx="16" ry="8" fill={c3} fillOpacity="0.2" stroke={i} strokeWidth="0.9"/>
-        <ellipse cx="0" cy="10" rx="11" ry="5" stroke={f} strokeWidth="0.5" strokeDasharray="2,2"/>
-        {/* Floating tea house on bridge */}
-        <line x1="-12" y1="10" x2="-20" y2="10" stroke={i} strokeWidth="0.8"/>
-        <rect x="-20" y="4" width="10" height="8" rx="0.5" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <path d="-22 4 L-15 -2 L-8 4" stroke={i} strokeWidth="0.8"/>
-        {/* Stone lanterns */}
-        {[-8, 10].map(lx => <g key={lx}>
-          <rect x={lx} y="0" width="4" height="8" rx="0.3" fill={f} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-          <path d={`M${lx-2} 0 L${lx+2} -5 L${lx+6} 0`} fill={f} fillOpacity="0.3" stroke={i} strokeWidth="0.6"/>
-        </g>)}
-        {/* Skyscrapers pressing in */}
-        <rect x="12" y="-16" width="8" height="20" fill={f} fillOpacity="0.15" stroke={f} strokeWidth="0.5"/>
-        <rect x="18" y="-22" width="6" height="26" fill={f} fillOpacity="0.15" stroke={f} strokeWidth="0.5"/>
-      </g>
-    );
+    // ── 39. Kobe Beef Teppanyaki Misono (Sizzling A5 Wagyu) ───────────────────
+    if (tl.includes('kobe beef') || tl.includes('teppanyaki') || tl.includes('misono') || tl.includes('wagyu')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Heavy iron teppan griddle */}
+          <rect x="-20" y="8" width="40" height="5" rx="0.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
+          {/* Marbled A5 Wagyu beef cubes */}
+          {[-10, -2, 6].map(bx => (
+            <rect key={bx} x={bx} y="0" width="6" height="6" rx="0.8" fill={c2} fillOpacity="0.75" stroke={i} strokeWidth="0.8"/>
+          ))}
+          {/* Crispy golden garlic chips */}
+          {[-8, 0, 8].map(gx => <ellipse key={gx} cx={gx} cy="-4" rx="2.2" ry="1.2" fill={c3} stroke={i} strokeWidth="0.5"/>)}
+          {/* Chef's metal spatula */}
+          <line x1="16" y1="-12" x2="11" y2="4" stroke={i} strokeWidth="1.2"/>
+          <rect x="8" y="2" width="7" height="4" rx="0.5" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.7" transform="rotate(-30,11,4)"/>
+        </g>
+      );
+    }
 
-    // ── Tsukiji Market ────────────────────────────────────────────────────
-    if (tl.includes('tsukiji') || tl.includes('outer market')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Tuna on ice */}
-        <path d="M-18 4 Q-10 -2 0 0 Q10 2 18 -2 Q14 8 0 8 Q-14 8 -18 4Z"
-          fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.1"/>
-        <line x1="-12" y1="4" x2="12" y2="2" stroke={f} strokeWidth="0.5"/>
-        {/* Ice crystals */}
-        {[-14,-6,4,12].map(ix => <circle key={ix} cx={ix} cy="6" r="1" fill="white" fillOpacity="0.6" stroke={f} strokeWidth="0.3"/>)}
-        {/* Tamagoyaki press */}
-        <rect x="-10" y="12" width="14" height="8" rx="1" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <line x1="-10" y1="16" x2="4" y2="16" stroke={f} strokeWidth="0.4"/>
-        {/* Uni cup */}
-        <path d="M10 12 Q8 16 10 20 Q14 22 18 20 Q20 16 18 12Z" fill={c3} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
-        {/* Market stall roof */}
-        <path d="M-20 10 Q0 6 20 10" stroke={c1} strokeWidth="0.7" strokeDasharray="2,2"/>
-      </g>
-    );
+    // ── 40. Suntory Yamazaki Distillery (Copper Stills & Casks) ───────────────
+    if (tl.includes('suntory') || tl.includes('yamazaki') || tl.includes('distillery')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Majestic Copper Swan-Neck Pot Still */}
+          <path d="M-14 16 Q-18 10 -16 4 Q-12 -2 -8 0 Q-4 2 -6 8 Q-4 16 -6 16 Z" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="1.2"/>
+          <path d="M-10 2 Q-6 -6 -6 -14 Q-4 -18 4 -16" stroke={i} strokeWidth="1.1"/>
+          {/* Charred White Oak Whisky Barrel */}
+          <ellipse cx="10" cy="6" rx="8" ry="10" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
+          {[-4, 0, 4].map(by => <line key={by} x1="2" y1={6 + by} x2="18" y2={6 + by} stroke={f} strokeWidth="0.5"/>)}
+          {/* Tasting glass */}
+          <path d="M-18 -4 L-16 4 L-10 4 L-8 -4 Z" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
 
-    // ── Tokyo Tower ───────────────────────────────────────────────────────
-    if (tl.includes('tokyo tower')) return (
-      <g fill="none" strokeLinecap="round">
-        <path d="M-10 22 L-4 4 L0 -22 L4 4 L10 22" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
-        <path d="-10 22 L10 22 M-7 14 L7 14 M-4 6 L4 6" stroke={i} strokeWidth="0.7"/>
-        <line x1="0" y1="-22" x2="0" y2="-28" stroke={i} strokeWidth="0.9"/>
-        {/* Main deck */}
-        <rect x="-5" y="4" width="10" height="4" rx="0.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
-        {/* Top deck */}
-        <rect x="-3" y="-6" width="6" height="3" rx="0.3" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-        {/* Orange/white bands */}
-        <line x1="-8" y1="18" x2="8" y2="18" stroke={c1} strokeWidth="1.2"/>
-        <line x1="-5" y1="10" x2="5" y2="10" stroke={c1} strokeWidth="1.2"/>
-        {/* City base */}
-        <path d="M-22 22 L-18 14 L-14 18 L-8 10 L0 14 L8 8 L14 14 L18 10 L22 22" stroke={f} strokeWidth="0.6"/>
-      </g>
-    );
+    // ── 41. Kuromon Ichiba Market Osaka ───────────────────────────────────────
+    if (tl.includes('kuromon') || tl.includes('ichiba') || tl.includes('market')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Market arcade glass roof */}
+          <path d="M-22 -4 Q0 -12 22 -4" stroke={i} strokeWidth="1.3"/>
+          <line x1="-20" y1="-3" x2="-20" y2="18" stroke={i} strokeWidth="0.8"/>
+          <line x1="20" y1="-3" x2="20" y2="18" stroke={i} strokeWidth="0.8"/>
+          {/* Giant hanging market lantern */}
+          <ellipse cx="0" cy="0" rx="6" ry="8" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="1"/>
+          {/* Fresh Uni (Sea Urchin in shell) */}
+          <circle cx="-10" cy="12" r="5" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+          {[0, 60, 120, 180, 240, 300].map(a => {
+            const rad = (a * Math.PI) / 180;
+            return <line key={a} x1={-10 + Math.cos(rad) * 4} y1={12 + Math.sin(rad) * 4} x2={-10 + Math.cos(rad) * 7} y2={12 + Math.sin(rad) * 7} stroke={i} strokeWidth="0.6"/>;
+          })}
+        </g>
+      );
+    }
 
-    // ── Osaka Castle ──────────────────────────────────────────────────────
-    if (tl.includes('osaka castle')) return (
-      <g fill="none" strokeLinecap="round">
-        <rect x="-14" y="8" width="28" height="10" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-        <rect x="-11" y="2" width="22" height="8" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="0.9"/>
-        <rect x="-8" y="-4" width="16" height="8" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
-        <path d="-16 8 L0 2 L16 8" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
-        <path d="-13 2 L0 -4 L13 2" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1"/>
-        <path d="-10 -4 L0 -10 L10 -4" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        <line x1="0" y1="-12" x2="0" y2="-16" stroke={i} strokeWidth="0.8"/>
-        {/* Stone base */}
-        <path d="-20 18 L-16 12 L16 12 L20 18" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        {/* Moat */}
-        <path d="-22 20 Q-8 17 0 20 Q10 23 22 20" stroke={c3} strokeWidth="0.9"/>
-      </g>
-    );
+    // ── 42. Fukutaro Okonomiyaki Osaka ────────────────────────────────────────
+    if (tl.includes('okonomiyaki') || tl.includes('fukutaro')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Sizzling cabbage pancake */}
+          <ellipse cx="0" cy="6" rx="15" ry="10" fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.2"/>
+          {/* Japanese mayo lattice */}
+          <path d="M-10 4 Q-5 0 0 4 Q5 8 10 4" stroke="white" strokeWidth="1.4" fill="none"/>
+          <path d="M-10 8 Q-5 4 0 8 Q5 12 10 8" stroke="white" strokeWidth="1.4" fill="none"/>
+          {/* Dancing bonito flakes (Katsuobushi) */}
+          {[[-6, 2], [0, -2], [6, 2]].map(([bx, by], bi) => (
+            <path key={bi} d={`M${bx - 3} ${by} Q${bx} ${by - 4} ${bx + 3} ${by}`} stroke={c2} strokeWidth="0.9"/>
+          ))}
+          {/* Metal teko spatula */}
+          <line x1="16" y1="-8" x2="10" y2="8" stroke={i} strokeWidth="1.3"/>
+          <rect x="8" y="6" width="7" height="4" rx="0.5" fill={c3} stroke={i} strokeWidth="0.7" transform="rotate(-30,11,8)"/>
+        </g>
+      );
+    }
 
-    // ── Fugu / blowfish ───────────────────────────────────────────────────
-    if (tl.includes('fugu') || tl.includes('blowfish') || tl.includes('zuboraya')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Blowfish body */}
-        <circle cx="-4" cy="0" r="12" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
-        {/* Spines */}
-        {[0,30,60,90,120,150,180,210,240,270,300,330].map(a => (
-          <line key={a}
-            x1={(Math.cos(a*Math.PI/180)*12-4).toFixed(1)} y1={(Math.sin(a*Math.PI/180)*12).toFixed(1)}
-            x2={(Math.cos(a*Math.PI/180)*16-4).toFixed(1)} y2={(Math.sin(a*Math.PI/180)*16).toFixed(1)}
-            stroke={i} strokeWidth="0.7"/>
-        ))}
-        <circle cx="-4" cy="-2" r="2.5" fill={i} fillOpacity="0.5" stroke="none"/>
-        <path d="-2 2 Q0 4 -4 4" stroke={i} strokeWidth="0.6"/>
-        {/* Sashimi fan */}
-        {[-6,-2,2,6,10].map((sx2,idx2) => (
-          <ellipse key={idx2} cx={14+sx2*0.3} cy={6-idx2*2} rx="5" ry="1.5"
-            fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.6"
-            transform={`rotate(${-20+idx2*8},${14+sx2*0.3},${6-idx2*2})`}/>
-        ))}
-      </g>
-    );
+    // ── 43. Nara: Todai-ji Daibutsu & Bowing Sika Deer ────────────────────────
+    if (tl.includes('nara') || tl.includes('todai-ji') || tl.includes('deer')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Sika Deer with majestic antlers */}
+          <ellipse cx="-8" cy="6" rx="7" ry="5.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
+          <circle cx="-8" cy="-6" r="3.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          {/* Antlers */}
+          <path d="M-10 -9 L-14 -18 M-12 -14 L-8 -15" stroke={i} strokeWidth="0.9"/>
+          <path d="M-6 -9 L-3 -17 M-5 -13 L-1 -14" stroke={i} strokeWidth="0.9"/>
+          {/* Todai-ji Great Buddha Hall roofline */}
+          <polygon points="2,-4 14,-14 26,-4" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          <rect x="4" y="-4" width="20" height="16" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
+          <circle cx="14" cy="2" r="3" fill={c3} fillOpacity="0.7" stroke="none"/>
+        </g>
+      );
+    }
 
-    // ── Okonomiyaki ───────────────────────────────────────────────────────
-    if (tl.includes('okonomiyaki') || tl.includes('fukutaro')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Griddle pan */}
-        <ellipse cx="0" cy="14" rx="18" ry="5" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-        {/* Pancake */}
-        <ellipse cx="0" cy="6" rx="14" ry="10" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.1"/>
-        {/* Mayo zigzag */}
-        <path d="M-8 4 Q-4 0 0 4 Q4 8 8 4" stroke="white" strokeWidth="1.5" fill="none"/>
-        {/* Bonito flakes */}
-        {[[-6,2],[0,-2],[6,2],[-3,6],[3,6]].map(([bx,by]) => (
-          <path key={bx} d={`M${bx-3} ${by} Q${bx} ${by-4} ${bx+3} ${by}`}
-            stroke={c2} strokeWidth="0.8" fill="none"/>
-        ))}
-        {/* Sauce drizzle */}
-        <path d="M-10 0 Q-6 -4 -2 0 Q2 4 6 0 Q10 -4 12 0" stroke={c3} strokeWidth="1.2" fill="none"/>
-        {/* Spatula */}
-        <path d="M16 -8 L10 8" stroke={i} strokeWidth="1.2"/>
-        <rect x="8" y="6" width="8" height="4" rx="1" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.7" transform="rotate(-30,12,8)"/>
-      </g>
-    );
+    // ── 44. Dotonbori Canal Walk (Glico Man & Neon) ───────────────────────────
+    if (tl.includes('dotonbori')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Glico Running Man silhouette */}
+          <circle cx="-10" cy="-14" r="3" fill={c1} stroke={i} strokeWidth="0.9"/>
+          <line x1="-10" y1="-11" x2="-10" y2="-3" stroke={i} strokeWidth="1.2"/>
+          <path d="M-10 -9 L-16 -5 M-10 -9 L-4 -5" stroke={i} strokeWidth="1.1"/>
+          <path d="M-10 -3 L-15 4 M-10 -3 L-5 2" stroke={i} strokeWidth="1.1"/>
+          {/* Giant mechanical crab claw */}
+          <path d="M6 -10 Q14 -14 18 -8 Q16 -4 10 -6 Z" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="0.9"/>
+          <path d="M12 -6 Q18 -2 16 2" stroke={i} strokeWidth="0.9"/>
+          {/* Canal water with neon reflections */}
+          <path d="M-22 14 Q-8 11 0 14 Q10 17 22 14" stroke={c2} strokeWidth="1.2"/>
+          <line x1="-12" y1="16" x2="-6" y2="20" stroke={c1} strokeWidth="0.8"/>
+          <line x1="4" y1="16" x2="10" y2="20" stroke={c3} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Yudofu / tofu ─────────────────────────────────────────────────────
-    if (tl.includes('yudofu') || tl.includes('tofu') || tl.includes('junsei')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Clay pot */}
-        <path d="M-12 8 Q-14 0 -12 -8 Q-6 -14 0 -14 Q6 -14 12 -8 Q14 0 12 8Z"
-          fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        {/* Kombu in water */}
-        <path d="M-8 -2 Q-4 -6 0 -2 Q4 2 8 -2" stroke={c3} strokeWidth="1" fill="none"/>
-        {/* Tofu block */}
-        <rect x="-6" y="-6" width="12" height="8" rx="1" fill="white" fillOpacity="0.7" stroke={i} strokeWidth="0.9"/>
-        {/* Steam */}
-        <path d="-4 -6 Q-6 -12 -4 -18" stroke={f} strokeWidth="0.8"/>
-        <path d="2 -6 Q4 -12 2 -18" stroke={f} strokeWidth="0.8"/>
-        {/* Sesame sauce bowl */}
-        <path d="M-20 6 Q-18 2 -14 4 Q-12 2 -10 4 Q-12 8 -16 8 Q-20 8 -20 6Z"
-          fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 45. Osaka Castle & Nishinomaru Garden ─────────────────────────────────
+    if (tl.includes('osaka castle') || tl.includes('nishinomaru')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* 3-Tier Main Keep */}
+          <rect x="-14" y="6" width="28" height="10" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
+          <rect x="-11" y="0" width="22" height="8" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="0.9"/>
+          <rect x="-8" y="-6" width="16" height="8" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
+          {/* Curved gabled roofs */}
+          <path d="M-16 6 L0 0 L16 6" fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.1"/>
+          <path d="M-13 0 L0 -6 L13 0" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          <path d="M-10 -6 L0 -12 L10 -6" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="0.9"/>
+          {/* Golden Shachihoko fish ornament */}
+          <path d="M-8 -12 Q-10 -16 -6 -14" stroke={c3} strokeWidth="1"/>
+          <path d="M8 -12 Q10 -16 6 -14" stroke={c3} strokeWidth="1"/>
+          {/* Stone moat foundation */}
+          <path d="M-20 18 L-16 12 L16 12 L20 18" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
+        </g>
+      );
+    }
 
-    // ── Gion walk ─────────────────────────────────────────────────────────
-    if (tl.includes('gion') || tl.includes('maiko') || tl.includes('geiko')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Cobblestone lane */}
-        {[-12,-6,0,6,12].map(sx2 => (
-          <ellipse key={sx2} cx={sx2} cy="20" rx="4" ry="2" fill={f} fillOpacity="0.3" stroke={i} strokeWidth="0.5"/>
-        ))}
-        {/* Machiya buildings */}
-        <rect x="-20" y="-8" width="10" height="26" fill={c1} fillOpacity="0.15" stroke={i} strokeWidth="0.9"/>
-        <rect x="10" y="-4" width="12" height="22" fill={c1} fillOpacity="0.15" stroke={i} strokeWidth="0.9"/>
-        {/* Lattice windows */}
-        {[0,1,2].map(r => [0,1].map(c2 => (
-          <rect key={`${r}-${c2}`} x={-19+c2*4} y={-6+r*6} width="3" height="4" rx="0.2"
-            fill={c2===0&&r===1 ? c3 : 'none'} fillOpacity="0.5" stroke={f} strokeWidth="0.4"/>
-        )))}
-        {/* Red lantern */}
-        <ellipse cx="0" cy="-6" rx="5" ry="8" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="0.9"/>
-        <line x1="0" y1="-14" x2="0" y2="-12" stroke={i} strokeWidth="0.8"/>
-        <line x1="-5" y1="-6" x2="5" y2="-6" stroke={f} strokeWidth="0.4"/>
-        {/* Willow branch */}
-        <path d="M20 -10 Q22 0 18 12 M20 -4 Q24 4 20 14 M20 2 Q26 10 22 20" stroke={c1} strokeWidth="0.8" fillOpacity="0.0"/>
-      </g>
-    );
+    // ── 46. Amerika-mura Shinsaibashi ────────────────────────────────────────
+    if (tl.includes('amerika') || tl.includes('shinsaibashi')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Vintage American Denim Jacket */}
+          <path d="M-12 -12 L-4 -16 L4 -16 L12 -12 L16 -4 L10 0 L10 12 L-10 12 L-10 0 L-16 -4 Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Collar & brass buttons */}
+          <path d="M-4 -16 L0 -10 L4 -16" stroke={i} strokeWidth="1"/>
+          {[-4, 2, 8].map(by => <circle key={by} cx="0" cy={by} r="0.8" fill={c3} stroke="none"/>)}
+          {/* Peace on Earth / street art motif */}
+          <circle cx="0" cy="18" r="3.5" stroke={c2} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Nijo Castle ───────────────────────────────────────────────────────
-    if (tl.includes('nijo')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Castle wall and tower */}
-        <rect x="-20" y="2" width="40" height="16" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        {/* Tower tiers */}
-        <rect x="-10" y="-10" width="20" height="13" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
-        <path d="-12 -10 L0 -18 L12 -10" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
-        <path d="-8 -10 L0 -6 L8 -10" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
-        {/* Golden screen suggestion */}
-        <rect x="-6" y="4" width="12" height="8" rx="0.3" fill={c1} fillOpacity="0.25" stroke={f} strokeWidth="0.5"/>
-        {/* Nightingale floor wavy lines */}
-        <path d="-18 10 Q-12 8 -6 10 Q0 12 6 10 Q12 8 18 10" stroke={f} strokeWidth="0.6" strokeDasharray="2,1"/>
-        {/* Stone base */}
-        <path d="-22 18 L-18 14 L18 14 L22 18" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 47. Wanaka Takoyaki Shinsaibashi ──────────────────────────────────────
+    if (tl.includes('takoyaki') || tl.includes('wanaka')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Traditional wooden boat tray */}
+          <path d="M-18 10 Q0 16 18 10 L16 4 Q0 10 -16 4 Z" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1"/>
+          {/* 3 Hot Takoyaki spheres */}
+          {[-10, 0, 10].map(tx => (
+            <g key={tx}>
+              <circle cx={tx} cy="2" r="5.5" fill={c2} fillOpacity="0.75" stroke={i} strokeWidth="1.1"/>
+              {/* Octopus piece core */}
+              <circle cx={tx} cy="2" r="1.5" fill={c3} stroke="none"/>
+            </g>
+          ))}
+          {/* Dancing bonito flakes & steam */}
+          <path d="M-8 -6 Q-4 -12 0 -6" stroke={c3} strokeWidth="0.9"/>
+          <path d="M2 -6 Q6 -12 10 -6" stroke={c3} strokeWidth="0.9"/>
+        </g>
+      );
+    }
 
-    // ── Nanzen-ji ─────────────────────────────────────────────────────────
-    if (tl.includes('nanzen')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Sanmon gate */}
-        <rect x="-16" y="4" width="32" height="16" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
-        <path d="-18 4 L0 -8 L18 4" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
-        {/* 3 arched portals */}
-        {[-10,0,10].map(px => (
-          <path key={px} d={`M${px-5} 20 L${px-5} 10 Q${px} 6 ${px+5} 10 L${px+5} 20`}
-            fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
-        ))}
-        {/* Red-brick aqueduct arches */}
-        {[-14,-4,6].map(ax => (
-          <g key={ax}>
-            <path d={`M${ax} 24 Q${ax+5} 16 ${ax+10} 24`} fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.9"/>
-          </g>
-        ))}
-        <line x1="-16" y1="16" x2="20" y2="16" stroke={c2} strokeWidth="1"/>
-      </g>
-    );
+    // ── 48. Hanshin Tigers at Koshien Stadium (Baseball Frenzy) ───────────────
+    if (tl.includes('hanshin') || tl.includes('koshien') || tl.includes('baseball') || tl.includes('tigers')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Crossed wooden baseball bats */}
+          <line x1="-16" y1="16" x2="16" y2="-12" stroke={i} strokeWidth="1.4"/>
+          <line x1="16" y1="16" x2="-16" y2="-12" stroke={i} strokeWidth="1.4"/>
+          {/* Official baseball with red seams */}
+          <circle cx="0" cy="0" r="8" fill="white" stroke={i} strokeWidth="1.2"/>
+          <path d="M-4 -6 Q-2 0 -4 6" stroke={c3} strokeWidth="0.9"/>
+          <path d="M4 -6 Q2 0 4 6" stroke={c3} strokeWidth="0.9"/>
+          {/* Hanshin Tigers striped cheer horn / jet balloon */}
+          <path d="M-8 -16 L-14 -22 L-10 -24 L-4 -18 Z" fill={c2} fillOpacity="0.8" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Tenryu-ji garden ─────────────────────────────────────────────────
-    if (tl.includes('tenryu') || tl.includes('tenryuji')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Garden pond */}
-        <ellipse cx="0" cy="12" rx="16" ry="7" fill={c3} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
-        {/* Borrowed landscape - Arashiyama hills */}
-        <path d="-22 4 L-14 -8 L-6 0 L2 -14 L10 -4 L18 -10 L22 4" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.8"/>
-        {/* Stone stepping stones in pond */}
-        {[-8,-2,4,10].map(sx2 => <ellipse key={sx2} cx={sx2} cy="12" rx="3" ry="2" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.6"/>)}
-        {/* Pine on shore */}
-        <path d="-18 4 L-18 -6 L-24 0 L-22 4 M-18 -2 L-12 -4" stroke={i} strokeWidth="0.9"/>
-        <circle cx="-20" cy="-8" r="5" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
-        {/* Reflection */}
-        <path d="-14 16 Q0 14 14 16" stroke={c1} strokeWidth="0.5" strokeOpacity="0.5"/>
-      </g>
-    );
+    // ── 49. Sanjusangen-do (1,001 Gilded Kannon Statues) ───────────────────────
+    if (tl.includes('sanjusangen') || tl.includes('kannon')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Long wooden temple hall facade */}
+          <rect x="-20" y="2" width="40" height="14" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          <path d="M-22 2 L0 -8 L22 2" stroke={i} strokeWidth="1.2"/>
+          {/* Serried ranks of golden Kannon halos */}
+          {[-12, -6, 0, 6, 12].map(kx => (
+            <g key={kx}>
+              <circle cx={kx} cy="-1" r="3.5" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="0.7"/>
+              <ellipse cx={kx} cy="7" rx="2" ry="4" fill={c3} fillOpacity="0.5" stroke="none"/>
+            </g>
+          ))}
+        </g>
+      );
+    }
 
-    // ── Sagano train / gorge ───────────────────────────────────────────────
-    if (tl.includes('sagano') || tl.includes('romantic train') || tl.includes('gorge')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Gorge walls */}
-        <path d="-22 -18 Q-20 -8 -18 0 L-18 22" stroke={i} strokeWidth="1.1"/>
-        <path d="22 -18 Q20 -8 18 0 L18 22" stroke={i} strokeWidth="1.1"/>
-        {/* River at bottom */}
-        <path d="-18 18 Q-8 14 0 18 Q8 22 18 18" stroke={c3} strokeWidth="1.2"/>
-        <path d="-18 21 Q-8 18 0 21 Q8 24 18 21" stroke={c3} strokeWidth="0.5"/>
-        {/* Train car */}
-        <rect x="-12" y="-4" width="24" height="10" rx="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
-        {[-8,-2,4,10].map(wx => <rect key={wx} x={wx} y="-2" width="5" height="5" rx="0.5"
-          fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.5"/>)}
-        {/* Track */}
-        <line x1="-22" y1="6" x2="22" y2="6" stroke={i} strokeWidth="1.1"/>
-        <line x1="-22" y1="8" x2="22" y2="8" stroke={i} strokeWidth="1.1"/>
-        {[-16,-8,0,8,16].map(tx => <line key={tx} x1={tx} y1="6" x2={tx} y2="8" stroke={i} strokeWidth="0.9"/>)}
-      </g>
-    );
+    // ── 50. Higashiyama: Sannen-zaka, Ninenzaka & Yasaka Pagoda ───────────────
+    if (tl.includes('sannen') || tl.includes('ninenzaka') || (tl.includes('higashiyama') && !tl.includes('obanzai'))) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Five-Story Yasaka Pagoda silhouette */}
+          {[0, 1, 2, 3, 4].map(tier => (
+            <g key={tier}>
+              <rect x={-8 + tier * 1.5} y={-18 + tier * 6.5} width={16 - tier * 3} height={5.5} fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.8"/>
+              <path d={`M${-10 + tier * 1.5} ${-18 + tier * 6.5} L0 ${-22 + tier * 6.5} L${10 - tier * 1.5} ${-18 + tier * 6.5}`} fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
+            </g>
+          ))}
+          <line x1="0" y1="-22" x2="0" y2="-26" stroke={i} strokeWidth="0.9"/>
+          {/* Sloping stone-paved machiya street */}
+          <path d="M-22 18 L22 12" stroke={i} strokeWidth="1.2"/>
+          {[-14, -6, 4, 14].map(sx => <ellipse key={sx} cx={sx} cy={16 - sx * 0.15} rx="3" ry="1.5" fill={f} stroke={i} strokeWidth="0.5"/>)}
+        </g>
+      );
+    }
 
-    // ── Kappo / counter kaiseki ────────────────────────────────────────────
-    if (tl.includes('kappo') || tl.includes('farewell kaiseki') || tl.includes('kaiseki') && tl.includes('kyoto')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Counter top */}
-        <rect x="-20" y="6" width="40" height="4" rx="0.5" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
-        {/* Lacquer bowls on counter */}
-        {[-12,-4,4,12].map(bx => (
-          <g key={bx}>
-            <path d={`M${bx-5} 6 Q${bx-6} 0 ${bx-4} -4 Q${bx} -6 ${bx+4} -4 Q${bx+6} 0 ${bx+5} 6Z`}
-              fill={c1} fillOpacity={bx===4?0.5:0.3} stroke={i} strokeWidth="0.8"/>
-            <path d={`M${bx-5} 6 Q${bx} 4 ${bx+5} 6`} stroke={i} strokeWidth="0.5"/>
-          </g>
-        ))}
-        {/* Chef's hands / ladle */}
-        <path d="M18 -8 Q22 -4 20 2 Q18 6 16 4" stroke={i} strokeWidth="0.9"/>
-        <circle cx="16" cy="4" r="3" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
-        {/* Sake carafe */}
-        <path d="-20 -2 Q-22 -6 -20 -12 Q-16 -16 -12 -12 Q-10 -6 -12 -2Z"
-          fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
-        <line x1="-16" y1="-12" x2="-16" y2="-18" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 51. Fushimi Inari Taisha (Endless Torii Tunnel & Kitsune) ──────────────
+    if (tl.includes('fushimi inari') || tl.includes('inari')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Receding tunnel of vermillion Torii Gates */}
+          {[-8, -4, 0].map((tz, idx) => {
+            const w = 18 - idx * 4;
+            const h = 24 - idx * 5;
+            return (
+              <g key={tz}>
+                <line x1={-w} y1={h - 10} x2={-w} y2={-h + 10} stroke={c3} strokeWidth={1.8 - idx * 0.3}/>
+                <line x1={w} y1={h - 10} x2={w} y2={-h + 10} stroke={c3} strokeWidth={1.8 - idx * 0.3}/>
+                <line x1={-w - 3} y1={-h + 12} x2={w + 3} y2={-h + 12} stroke={c3} strokeWidth={2 - idx * 0.3}/>
+              </g>
+            );
+          })}
+          {/* Stone Kitsune fox messenger holding key */}
+          <path d="M-14 10 Q-16 6 -14 2 Q-10 0 -8 4 Q-6 10 -10 12 Z" fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
 
-    // ── Kuromon Market ────────────────────────────────────────────────────
-    if (tl.includes('kuromon') || tl.includes('ichiba') || tl.includes("kitchen of japan")) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Market roof */}
-        <path d="-22 -4 Q0 -10 22 -4" stroke={i} strokeWidth="1.1"/>
-        <line x1="-22" y1="-4" x2="-22" y2="20" stroke={i} strokeWidth="0.8"/>
-        <line x1="22" y1="-4" x2="22" y2="20" stroke={i} strokeWidth="0.8"/>
-        {/* Stalls */}
-        {[-14,-4,6,16].map(sx2 => (
-          <g key={sx2}>
-            <rect x={sx2} y="2" width="8" height="12" rx="0.3" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.7"/>
-            <path d={`M${sx2-2} 2 Q${sx2+4} -2 ${sx2+10} 2`} fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
-          </g>
-        ))}
-        {/* Sea urchin and crab on display */}
-        <circle cx="-10" cy="10" r="5" fill={c3} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
-        {[0,40,80,120,160,200,240,280,320].map(a => (
-          <line key={a}
-            x1={(-10+Math.cos(a*Math.PI/180)*5).toFixed(1)} y1={(10+Math.sin(a*Math.PI/180)*5).toFixed(1)}
-            x2={(-10+Math.cos(a*Math.PI/180)*8).toFixed(1)} y2={(10+Math.sin(a*Math.PI/180)*8).toFixed(1)}
-            stroke={i} strokeWidth="0.6"/>
-        ))}
-      </g>
-    );
+    // ── 52. Obanzai Kyoto Home Cooking ────────────────────────────────────────
+    if (tl.includes('obanzai')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Lacquered service tray */}
+          <rect x="-20" y="8" width="40" height="5" rx="1" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1"/>
+          {/* Trio of handcrafted ceramic small bowls */}
+          {[-12, 0, 12].map(bx => (
+            <g key={bx}>
+              <path d={`M${bx - 5} 8 Q${bx - 6} 2 ${bx - 4} -2 Q${bx} -4 ${bx + 4} -2 Q${bx + 6} 2 ${bx + 5} 8 Z`} fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+              {/* Seasonal simmered dish garnish */}
+              <circle cx={bx} cy="2" r="1.5" fill={c3} stroke="none"/>
+            </g>
+          ))}
+          {/* Bamboo chopsticks */}
+          <line x1="-16" y1="4" x2="16" y2="4" stroke={i} strokeWidth="1.1"/>
+        </g>
+      );
+    }
 
-    // ── Obanzai / Kyoto home cooking ─────────────────────────────────────
-    if (tl.includes('obanzai') || tl.includes('oimatsu')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Row of small dishes */}
-        {[[-16,0],[-8,2],[0,0],[8,2],[16,0]].map(([dx2,dy]) => (
-          <g key={dx2}>
-            <path d={`M${dx2-5} ${8+dy} Q${dx2-6} ${2+dy} ${dx2-4} ${-2+dy} Q${dx2} ${-4+dy} ${dx2+4} ${-2+dy} Q${dx2+6} ${2+dy} ${dx2+5} ${8+dy}Z`}
-              fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
-          </g>
-        ))}
-        {/* Lacquer tray */}
-        <rect x="-22" y="8" width="44" height="4" rx="1" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <line x1="-22" y1="10" x2="22" y2="10" stroke={f} strokeWidth="0.3"/>
-        {/* Chopsticks */}
-        <line x1="-14" y1="-8" x2="-10" y2="8" stroke={i} strokeWidth="0.9"/>
-        <line x1="-10" y1="-8" x2="-6" y2="8" stroke={i} strokeWidth="0.9"/>
-        {/* Tea cup */}
-        <path d="M12 -8 Q10 -14 12 -18 Q16 -20 20 -18 Q22 -14 20 -8Z"
-          fill={c3} fillOpacity="0.35" stroke={i} strokeWidth="0.8"/>
-        <path d="M20 -14 Q24 -14 24 -10" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
+    // ── 53. Ginkaku-ji Silver Pavilion & Kogetsudai Sand Cone ─────────────────
+    if (tl.includes('ginkaku') || tl.includes('silver pavilion')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Two-tiered Silver Pavilion */}
+          <rect x="-12" y="2" width="24" height="12" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.1"/>
+          <rect x="-9" y="-7" width="18" height="10" fill={c2} fillOpacity="0.25" stroke={i} strokeWidth="1"/>
+          <path d="M-14 2 L0 -4 L14 2" stroke={i} strokeWidth="1.1"/>
+          <path d="M-11 -7 L0 -13 L11 -7" stroke={i} strokeWidth="0.9"/>
+          {/* Kogetsudai Moon-viewing sand cone */}
+          <polygon points="-22,14 -18,2 -14,14" fill={c1} fillOpacity="0.55" stroke={i} strokeWidth="1"/>
+          <path d="M-20 14 Q-18 6 -16 14" stroke={f} strokeWidth="0.6"/>
+          {/* Moss garden pond */}
+          <path d="M-12 16 Q0 19 14 16" stroke={c3} strokeWidth="0.9"/>
+        </g>
+      );
+    }
 
-    // ── Ramen ─────────────────────────────────────────────────────────────
-    if (tl.includes('ramen') || tl.includes('ramen street')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Ramen bowl */}
-        <path d="M-14 4 Q-16 -4 -14 -12 Q-8 -18 0 -18 Q8 -18 14 -12 Q16 -4 14 4Z"
-          fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
-        <path d="-14 4 Q0 8 14 4" stroke={i} strokeWidth="0.7"/>
-        {/* Noodle swirls */}
-        <path d="-8 -4 Q-4 -8 0 -4 Q4 0 8 -4 Q10 -8 12 -6" stroke={c3} strokeWidth="1" fill="none"/>
-        <path d="-10 0 Q-6 -4 -2 0 Q2 4 6 0" stroke={c3} strokeWidth="0.8" fill="none"/>
-        {/* Chashu pork */}
-        <ellipse cx="-4" cy="-8" rx="5" ry="3.5" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
-        <path d="-7 -9 Q-4 -12 -1 -9" stroke={f} strokeWidth="0.4"/>
-        {/* Soft egg half */}
-        <path d="M6 -10 Q10 -14 14 -10 Q14 -6 10 -6 Q6 -6 6 -10Z" fill="white" fillOpacity="0.6" stroke={i} strokeWidth="0.7"/>
-        <circle cx="10" cy="-9" r="2" fill={c1} fillOpacity="0.7" stroke="none"/>
-        {/* Steam */}
-        <path d="-2 -18 Q-4 -24 -2 -28" stroke={f} strokeWidth="0.8"/>
-        <path d="4 -18 Q6 -24 4 -28" stroke={f} strokeWidth="0.8"/>
-      </g>
-    );
+    // ── 54. Philosopher's Path (Tetsugaku-no-Michi Canal) ──────────────────────
+    if (tl.includes('philosopher')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Stone canal path */}
+          {[-14, -7, 0, 7, 14].map(sx => (
+            <ellipse key={sx} cx={sx} cy={12} rx="4" ry="2" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
+          ))}
+          {/* Flowing stone canal alongside */}
+          <path d="M-20 17 Q-8 14 0 17 Q10 20 20 17" stroke={c3} strokeWidth="1.2"/>
+          {/* Overhanging cherry & hydrangea boughs */}
+          <path d="M-16 10 L-16 -6 L-22 -14 M-16 -6 L-8 -12" stroke={i} strokeWidth="1.2"/>
+          <path d="M12 8 L12 -6 L18 -16 M12 -6 L4 -12" stroke={i} strokeWidth="1.2"/>
+          {/* Blossoms */}
+          {[[-20, -14], [-8, -12], [18, -16], [4, -12]].map(([bx, by], bi) => (
+            <circle key={bi} cx={bx} cy={by} r="2.5" fill={c2} fillOpacity="0.7" stroke={i} strokeWidth="0.5"/>
+          ))}
+        </g>
+      );
+    }
 
-    // ── Tempura ───────────────────────────────────────────────────────────
-    if (tl.includes('tempura') || tl.includes('daikokuya')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Shrimp tempura */}
-        <path d="M-2 -18 Q0 -12 2 -6 Q4 0 2 6 Q0 10 -2 6 Q-4 0 -2 -6 Q-2 -12 -2 -18Z"
-          fill={c1} fillOpacity="0.5" stroke={i} strokeWidth="1.1"/>
-        {/* Batter texture */}
-        {[-14,-8,-2,4,10].map(by => <line key={by} x1="-4" y1={by} x2="4" y2={by+2} stroke={f} strokeWidth="0.4"/>)}
-        {/* Vegetable tempura pieces */}
-        <ellipse cx="12" cy="-4" rx="7" ry="4" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.8" transform="rotate(-20,12,-4)"/>
-        <ellipse cx="12" cy="6" rx="6" ry="3.5" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8" transform="rotate(10,12,6)"/>
-        {/* Dark sesame-oil sauce */}
-        <path d="-18 14 Q-14 10 -10 14 Q-6 18 -2 14 Q2 10 6 14" stroke={c2} strokeWidth="1.2" fill="none"/>
-        {/* Chopsticks */}
-        <line x1="-14" y1="-20" x2="-8" y2="14" stroke={i} strokeWidth="1.1"/>
-        <line x1="-10" y1="-20" x2="-4" y2="14" stroke={i} strokeWidth="1.1"/>
-      </g>
-    );
+    // ── 55. Nanzen-ji Sanmon & Roman Aqueduct (Suirokaku) ─────────────────────
+    if (tl.includes('nanzen') || tl.includes('aqueduct')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Massive wooden Sanmon gate roof */}
+          <path d="M-18 -4 L0 -14 L18 -4" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.3"/>
+          <rect x="-14" y="-4" width="28" height="12" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
+          {/* Red-brick Roman Aqueduct arches (Suirokaku) */}
+          {[-12, 0, 12].map(ax => (
+            <path key={ax} d={`M${ax - 5} 18 L${ax - 5} 10 Q${ax} 6 ${ax + 5} 10 L${ax + 5} 18`} fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.9"/>
+          ))}
+          <line x1="-18" y1="18" x2="18" y2="18" stroke={i} strokeWidth="1.2"/>
+        </g>
+      );
+    }
 
-    // ── KIX / Kansai airport ──────────────────────────────────────────────
-    if (tl.includes('kix') || tl.includes('kansai international') || tl.includes('kansai') && tl.includes('airport')) return (
-      <g fill="none" strokeLinecap="round">
-        {/* Renzo Piano curved roof */}
-        <path d="-22 8 Q-10 -8 0 -10 Q10 -8 22 8" fill={c2} fillOpacity="0.2" stroke={i} strokeWidth="1.3"/>
-        <path d="-22 10 Q-10 -6 0 -8 Q10 -6 22 10" stroke={f} strokeWidth="0.5"/>
-        {/* Terminal wall grid */}
-        {[-3,-1,1,3].map(col => <line key={col} x1={col*6} y1="8" x2={col*6} y2="18" stroke={f} strokeWidth="0.4"/>)}
-        {[10,14,18].map(ry => <line key={ry} x1="-20" y1={ry} x2="20" y2={ry} stroke={f} strokeWidth="0.4"/>)}
-        {/* Airplane departing */}
-        <path d="M-8 -18 Q0 -22 8 -18 Q4 -14 0 -14 Q-4 -14 -8 -18Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
-        <path d="-2 -18 L-6 -24 L2 -22 L4 -16" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="0.7"/>
-        <path d="4 -16 L8 -20 L10 -16" fill={c3} fillOpacity="0.3" stroke={i} strokeWidth="0.6"/>
-        {/* Bay water */}
-        <path d="-22 22 Q-8 19 0 22 Q10 25 22 22" stroke={c3} strokeWidth="0.9"/>
-      </g>
-    );
+    // ── 56. Heian Shrine & Okazaki Garden ─────────────────────────────────────
+    if (tl.includes('heian') || tl.includes('okazaki')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Colossal Crimson Torii Gate */}
+          <line x1="-16" y1="16" x2="-16" y2="-12" stroke={c3} strokeWidth="2.4"/>
+          <line x1="16" y1="16" x2="16" y2="-12" stroke={c3} strokeWidth="2.4"/>
+          <line x1="-20" y1="-10" x2="20" y2="-10" stroke={c3} strokeWidth="2.6"/>
+          {/* Covered bridge over garden pond */}
+          <path d="M-14 10 Q0 4 14 10" stroke={c1} strokeWidth="1.5"/>
+          <rect x="-6" y="2" width="12" height="6" rx="0.5" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+          {/* Weeping wisteria / cherry branch */}
+          <path d="M12 -8 Q18 -4 14 4" stroke={c2} strokeWidth="1"/>
+        </g>
+      );
+    }
 
-    // ── Generic restaurant fallback ───────────────────────────────────────
+    // ── 57. Yudofu at Junsei (Simmering Silken Nanzen-ji Tofu) ─────────────────
+    if (tl.includes('yudofu') || tl.includes('junsei') || tl.includes('tofu')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Clay nabe pot */}
+          <path d="M-14 8 Q-16 0 -14 -8 Q-8 -14 0 -14 Q8 -14 14 -8 Q16 0 14 8 Z" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.2"/>
+          {/* Pure silken tofu blocks in broth */}
+          <rect x="-8" y="-6" width="7" height="6" rx="0.5" fill="white" fillOpacity="0.85" stroke={i} strokeWidth="0.8"/>
+          <rect x="1" y="-4" width="7" height="6" rx="0.5" fill="white" fillOpacity="0.85" stroke={i} strokeWidth="0.8"/>
+          {/* Kombu kelp ribbon in clear dashi */}
+          <path d="M-6 4 Q0 0 6 4" stroke={c2} strokeWidth="1.2"/>
+          {/* Rising steam */}
+          <path d="M-3 -14 Q-5 -22 -3 -26" stroke={f} strokeWidth="0.8"/>
+          <path d="M3 -14 Q5 -22 3 -26" stroke={f} strokeWidth="0.8"/>
+        </g>
+      );
+    }
+
+    // ── 58. Pontocho Alley & Kamo River Terraces (Kawayuka) ────────────────────
+    if (tl.includes('pontocho') || tl.includes('kamo river')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Narrow lantern-lit alleyway */}
+          <rect x="-18" y="-12" width="10" height="28" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
+          <rect x="8" y="-12" width="10" height="28" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1"/>
+          {/* Red paper lanterns */}
+          <ellipse cx="-13" cy="-4" rx="3.5" ry="5.5" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="0.8"/>
+          <ellipse cx="13" cy="-4" rx="3.5" ry="5.5" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="0.8"/>
+          {/* Kamo River flowing underneath wooden terrace */}
+          <path d="M-22 18 Q-8 15 0 18 Q10 21 22 18" stroke={c2} strokeWidth="1.2"/>
+        </g>
+      );
+    }
+
+    // ── 59. Ryoan-ji Zen Garden (15 Mysterious Stones) ─────────────────────────
+    if (tl.includes('ryoan') || tl.includes('zen garden')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Ancient clay oil-stained wall */}
+          <rect x="-22" y="-18" width="44" height="4" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="0.9"/>
+          {/* Raked white sand ripples */}
+          {[-12, -6, 0, 6, 12, 17].map(ly => (
+            <path key={ly} d={`M-22 ${ly} Q-10 ${ly - 2} 0 ${ly} Q10 ${ly + 2} 22 ${ly}`} stroke={f} strokeWidth="0.7"/>
+          ))}
+          {/* 5 Stone Clusters (The 15 Stones) */}
+          {[[-14, 2], [-4, -5], [4, 1], [12, -3], [17, 7]].map(([sx, sy], si) => (
+            <g key={si}>
+              <ellipse cx={sx} cy={sy} rx={3 + (si % 2)} ry={2.2} fill={c2} fillOpacity="0.65" stroke={i} strokeWidth="1"/>
+              <path d={`M${(sx as number) - 5} ${(sy as number) + 3} Q${sx} ${(sy as number) + 5} ${(sx as number) + 5} ${(sy as number) + 3}`} stroke={f} strokeWidth="0.5"/>
+            </g>
+          ))}
+        </g>
+      );
+    }
+
+    // ── 60. Kinkaku-ji Golden Pavilion (Reflected in Pond) ────────────────────
+    if (tl.includes('kinkaku') || tl.includes('golden pavilion')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* 3-Tier Gilded Pavilion */}
+          <rect x="-14" y="2" width="28" height="10" fill={c1} fillOpacity="0.75" stroke={i} strokeWidth="1.1"/>
+          <rect x="-11" y="-6" width="22" height="9" fill={c1} fillOpacity="0.7" stroke={i} strokeWidth="1"/>
+          <rect x="-8" y="-14" width="16" height="9" fill={c1} fillOpacity="0.65" stroke={i} strokeWidth="0.9"/>
+          {/* Sweeping gilded eaves */}
+          <path d="M-16 2 L0 -3 L16 2" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1"/>
+          <path d="M-13 -6 L0 -11 L13 -6" fill={c2} fillOpacity="0.45" stroke={i} strokeWidth="0.9"/>
+          <path d="M-10 -14 L0 -19 L10 -14" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+          {/* Phoenix rooftop spire */}
+          <line x1="0" y1="-21" x2="0" y2="-19" stroke={i} strokeWidth="0.9"/>
+          {/* Kyoko-chi Mirror Pond ripples */}
+          <path d="M-20 15 Q0 12 20 15" stroke={c3} strokeWidth="1"/>
+          <path d="M-14 18 Q0 21 14 18" stroke={c1} strokeWidth="0.6" strokeOpacity="0.6"/>
+        </g>
+      );
+    }
+
+    // ── 61. Daitoku-ji Zen Sub-Temples (Daisen-in) ─────────────────────────────
+    if (tl.includes('daitoku')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Zen sub-temple veranda & raked stone waterfall */}
+          <rect x="-16" y="2" width="32" height="18" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          <path d="M-18 2 L0 -8 L18 2" stroke={i} strokeWidth="1.2"/>
+          {/* Dry landscape karesansui stone arrangement */}
+          <polygon points="-8,16 -5,6 -2,16" fill={c2} stroke={i} strokeWidth="0.9"/>
+          <polygon points="2,16 6,4 10,16" fill={c2} stroke={i} strokeWidth="0.9"/>
+          {/* Concentric raked sand rings */}
+          <ellipse cx="0" cy="18" rx="14" ry="4" stroke={f} strokeWidth="0.6"/>
+        </g>
+      );
+    }
+
+    // ── 62. Nishiki Market (Kyoto's 400-Year Kitchen) ─────────────────────────
+    if (tl.includes('nishiki')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Iconic narrow 5-block canopy */}
+          <path d="M-20 -6 Q0 -14 20 -6" stroke={i} strokeWidth="1.3"/>
+          <rect x="-18" y="-6" width="36" height="24" fill={c1} fillOpacity="0.15" stroke={i} strokeWidth="0.9"/>
+          {/* Dango sweet rice skewer */}
+          <line x1="-8" y1="-14" x2="-8" y2="8" stroke={i} strokeWidth="0.9"/>
+          {[-6, -1, 4].map((dy, di) => (
+            <circle key={di} cx="-8" cy={dy} r="2.4" fill={c2} fillOpacity="0.75" stroke={i} strokeWidth="0.6"/>
+          ))}
+          {/* Fresh Yuba (tofu skin) rolls & pickled vegetables */}
+          <rect x="2" y="-2" width="12" height="8" rx="1" fill={c3} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+        </g>
+      );
+    }
+
+    // ── 63. Traditional Kaiseki at Nakamura / Kikunoi ─────────────────────────
+    if (tl.includes('kaiseki') || tl.includes('kikunoi') || tl.includes('nakamura') || tl.includes('kappo')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Lacquered Hinoki counter & presentation tray */}
+          <rect x="-20" y="6" width="40" height="5" rx="0.5" fill={c1} fillOpacity="0.35" stroke={i} strokeWidth="1.1"/>
+          {/* Multi-tier lacquered jubako box */}
+          {[-10, 0, 10].map((jx, ji) => (
+            <g key={jx}>
+              <path d={`M${jx - 4} 6 Q${jx - 5} 0 ${jx - 3} -4 Q${jx} -5 ${jx + 3} -4 Q${jx + 5} 0 ${jx + 4} 6 Z`} fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="0.8"/>
+              {/* Hassun seasonal garnish / maple leaf */}
+              <circle cx={jx} cy="-2" r="1.2" fill={c3} stroke="none"/>
+            </g>
+          ))}
+          {/* Ceramic sake carafe (Tokkuri) */}
+          <path d="M-18 -2 Q-20 -6 -18 -12 Q-14 -16 -10 -12 Q-8 -6 -10 -2 Z" fill={c3} fillOpacity="0.4" stroke={i} strokeWidth="0.8"/>
+          {/* Chef slicing knife (Yanagiba) */}
+          <line x1="8" y1="-14" x2="18" y2="4" stroke={i} strokeWidth="1.2"/>
+        </g>
+      );
+    }
+
+    // ── 64. Takagamine Tea Ceremony (Matcha Chasen & Chawan) ───────────────────
+    if (tl.includes('tea ceremony') || tl.includes('takagamine') || tl.includes('matcha')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Textured Raku ceramic tea bowl (Chawan) */}
+          <path d="M-14 4 Q-16 -4 -12 -10 Q0 -14 12 -10 Q16 -4 14 4 Z" fill={c1} fillOpacity="0.45" stroke={i} strokeWidth="1.2"/>
+          {/* Frothy emerald matcha green tea */}
+          <ellipse cx="0" cy="-6" rx="10" ry="4" fill={c2} fillOpacity="0.85" stroke={i} strokeWidth="0.8"/>
+          {/* Bamboo Chasen whisk standing in bowl */}
+          <path d="M-3 -6 L-5 -18 Q0 -22 5 -18 L3 -6" stroke={c3} strokeWidth="1"/>
+          <line x1="0" y1="-18" x2="0" y2="-6" stroke={c3} strokeWidth="0.8"/>
+          {/* Wagashi sweet on cedar paper */}
+          <ellipse cx="14" cy="8" rx="4" ry="2.5" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
+
+    // ── 65. Gion Twilight Walk (Geiko, Machiya & Willows) ──────────────────────
+    if (tl.includes('gion') || tl.includes('geiko') || tl.includes('maiko')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Historic Machiya wooden latticework */}
+          <rect x="-18" y="-8" width="10" height="26" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.9"/>
+          <rect x="8" y="-4" width="12" height="22" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="0.9"/>
+          {/* Red paper lantern on eave */}
+          <ellipse cx="0" cy="-6" rx="5" ry="8" fill={c3} fillOpacity="0.75" stroke={i} strokeWidth="1"/>
+          <line x1="0" y1="-14" x2="0" y2="-12" stroke={i} strokeWidth="0.8"/>
+          {/* Trailing willow branch sprig */}
+          <path d="M18 -10 Q22 0 16 12 M18 -4 Q24 4 18 16" stroke={c2} strokeWidth="0.9"/>
+          {/* Cobblestone pavement */}
+          {[-12, -4, 4, 12].map(sx => <ellipse key={sx} cx={sx} cy="20" rx="3.5" ry="1.5" fill={f} stroke={i} strokeWidth="0.5"/>)}
+        </g>
+      );
+    }
+
+    // ── 66. Tenryu-ji & Arashiyama Bamboo Grove ───────────────────────────────
+    if (tl.includes('tenryu') || tl.includes('bamboo') || tl.includes('arashiyama')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Towering vertical Bamboo culms */}
+          {[-14, -6, 2, 10, 18].map((bx, bi) => (
+            <g key={bx}>
+              <rect x={bx} y={-20 + (bi % 2) * 4} width="5" height="38" rx="2" fill={c2} fillOpacity="0.45" stroke={i} strokeWidth="1"/>
+              {[-10, -2, 6, 14].map(by => <line key={by} x1={bx} y1={by} x2={bx + 5} y2={by} stroke={i} strokeWidth="0.5"/>)}
+            </g>
+          ))}
+          {/* Zen garden pond & borrowed mountains */}
+          <ellipse cx="0" cy="18" rx="18" ry="6" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1"/>
+        </g>
+      );
+    }
+
+    // ── 67. Okochi Sanso Villa & Garden (Arashiyama Vista) ────────────────────
+    if (tl.includes('okochi') || tl.includes('sanso')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Hillside teahouse terrace */}
+          <rect x="-14" y="0" width="28" height="16" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          <path d="M-18 0 L0 -14 L18 0" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Oi River gorge panorama backdrop */}
+          <path d="M-22 4 L-14 -6 L-6 0 L2 -12 L10 -4 L20 4" stroke={f} strokeWidth="0.8"/>
+          {/* Stone lantern on mossy ledge */}
+          <rect x="-10" y="14" width="4" height="6" rx="0.5" fill={c3} stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
+
+    // ── 68. Clay-Pot Crab Dinner (Matsuba Donabe) ─────────────────────────────
+    if (tl.includes('clay') || tl.includes('crab') || tl.includes('donabe')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Heavy earthenware donabe clay pot */}
+          <path d="M-14 8 Q-16 0 -14 -6 Q-8 -12 0 -12 Q8 -12 14 -6 Q16 0 14 8 Z" fill={c1} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Domed clay lid with steam vent */}
+          <path d="M-12 -6 Q0 -16 12 -6" fill={c2} fillOpacity="0.5" stroke={i} strokeWidth="1.1"/>
+          <circle cx="0" cy="-16" r="2.5" fill={c2} stroke={i} strokeWidth="0.8"/>
+          {/* Steam curling from lid */}
+          <path d="M-3 -16 Q-5 -24 -3 -30" stroke={f} strokeWidth="0.9"/>
+          <path d="M3 -16 Q5 -24 3 -30" stroke={f} strokeWidth="0.9"/>
+          {/* Succulent Matsuba snow crab claw */}
+          <path d="M8 -4 Q14 -8 18 -4 Q16 0 12 -2 Z" fill={c3} fillOpacity="0.8" stroke={i} strokeWidth="0.9"/>
+        </g>
+      );
+    }
+
+    // ── 69. Nijo Castle (Nightingale Floors & Karamon Gate) ───────────────────
+    if (tl.includes('nijo')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Imperial Karamon Gate gilded roof */}
+          <rect x="-16" y="2" width="32" height="16" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          <path d="M-18 2 L0 -12 L18 2" fill={c2} fillOpacity="0.35" stroke={i} strokeWidth="1.2"/>
+          {/* Nightingale floor squeaking wood planks */}
+          <path d="M-14 12 Q-7 9 0 12 Q7 15 14 12" stroke={f} strokeWidth="0.8" strokeDasharray="3,1.5"/>
+          {/* Tokugawa Golden Screen Tiger motif */}
+          <rect x="-6" y="4" width="12" height="8" rx="0.5" fill={c3} fillOpacity="0.6" stroke={i} strokeWidth="0.6"/>
+        </g>
+      );
+    }
+
+    // ── 70. Kyoto Imperial Palace Grounds (Kyoto Gosho) ───────────────────────
+    if (tl.includes('imperial palace') || tl.includes('gosho')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Imperial Gate (Kenreimon) */}
+          <rect x="-18" y="0" width="36" height="18" fill={c1} fillOpacity="0.2" stroke={i} strokeWidth="1.1"/>
+          <path d="M-20 0 L0 -12 L20 0" fill={c2} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
+          {/* Imperial Chrysanthemum crest motif */}
+          <circle cx="0" cy="-4" r="3" fill={c3} stroke={i} strokeWidth="0.7"/>
+          {/* Ancient black pine trees & gravel expanse */}
+          <path d="M-14 -2 L-14 -12 L-20 -6" stroke={i} strokeWidth="0.8"/>
+          <circle cx="-16" cy="-12" r="4.5" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="0.7"/>
+        </g>
+      );
+    }
+
+    // ── 71. Fushimi Sake District & Gekkeikan Brewery ─────────────────────────
+    if (tl.includes('sake') || tl.includes('gekkeikan') || tl.includes('brewery')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Traditional white-walled Kura storehouse */}
+          <rect x="-16" y="-6" width="32" height="22" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          <path d="M-18 -6 L0 -18 L18 -6" fill={c2} fillOpacity="0.4" stroke={i} strokeWidth="1.2"/>
+          {/* Green cedar ball (Sugidama) hanging from eave */}
+          <circle cx="-10" cy="-2" r="4.5" fill={c2} fillOpacity="0.8" stroke={i} strokeWidth="0.8"/>
+          <line x1="-10" y1="-6" x2="-10" y2="-2" stroke={i} strokeWidth="0.8"/>
+          {/* Horikawa willow canal & wooden boat */}
+          <path d="M-22 18 Q-8 15 0 18 Q10 21 22 18" stroke={c3} strokeWidth="1.1"/>
+        </g>
+      );
+    }
+
+    // ── 72. Default Fallbacks by Activity Type ────────────────────────────────
+    if (tl.includes('hotel') || tl.includes('inn') || tl.includes('stay')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="-10" y="-18" width="20" height="32" fill={c1} fillOpacity="0.25" stroke={i} strokeWidth="1.1"/>
+          {[0, 1, 2, 3].map(row => (
+            [0, 1].map(col => (
+              <rect key={`${row}-${col}`} x={-7 + col * 8} y={-14 + row * 6} width="4.5" height="3.5" rx="0.3" fill={c2} fillOpacity="0.6" stroke={i} strokeWidth="0.4"/>
+            ))
+          ))}
+          <line x1="-14" y1="14" x2="14" y2="14" stroke={i} strokeWidth="0.9"/>
+        </g>
+      );
+    }
+
+    if (tl.includes('restaurant') || tl.includes('dining') || tl.includes('food') || tl.includes('dinner') || tl.includes('lunch')) {
+      return (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M-14 4 Q-16 -4 -14 -12 Q-8 -18 0 -18 Q8 -18 14 -12 Q16 -4 14 4 Z" fill={c1} fillOpacity="0.3" stroke={i} strokeWidth="1.2"/>
+          <path d="M-8 -4 Q-4 -8 0 -4 Q4 0 8 -4" stroke={c3} strokeWidth="1" fill="none"/>
+          <path d="M-2 -18 Q-4 -24 -2 -28" stroke={f} strokeWidth="0.8"/>
+          <path d="M4 -18 Q6 -24 4 -28" stroke={f} strokeWidth="0.8"/>
+        </g>
+      );
+    }
+
+    // Final Elegant Fallback: Torii & Mountain
     return (
-      <g fill="none" strokeLinecap="round">
-        <path d="M-12 4 Q0 0 12 4 Q10 12 0 14 Q-10 12 -12 4Z"
-          fill={c1} fillOpacity="0.55" stroke={i} strokeWidth="1" />
-        <path d="M-4 3 Q-6 -3 -4 -9" stroke={c3} strokeWidth="0.9" fill="none"/>
-        <path d="M0 2 Q-2 -4 0 -10" stroke={c3} strokeWidth="0.9" fill="none"/>
-        <path d="M4 3 Q6 -3 4 -9" stroke={c3} strokeWidth="0.9" fill="none"/>
-        <line x1="-3" y1="2" x2="-6" y2="-11" stroke={i} strokeWidth="1.3"/>
-        <line x1="2" y1="2" x2="0" y2="-11" stroke={i} strokeWidth="1.3"/>
-      </g>
-    );
-    // ── anime / otaku ──────────────────────────────────────────────────────
-    if (tl.includes('akihabara') || tl.includes('electric town')) return (
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-14" y="-18" width="28" height="32" rx="2" stroke={i} strokeWidth="1.2"/>
-        <line x1="-14" y1="-6" x2="14" y2="-6" stroke={i} strokeWidth="0.9"/>
-        <line x1="-14" y1="6" x2="14" y2="6" stroke={i} strokeWidth="0.9"/>
-        <rect x="-10" y="-14" width="7" height="5" rx="1" stroke={c2} strokeWidth="1"/>
-        <rect x="3" y="-14" width="7" height="5" rx="1" stroke={c2} strokeWidth="1"/>
-        <rect x="-10" y="-2" width="20" height="5" rx="1" stroke={c2} strokeWidth="1"/>
-        <line x1="0" y1="-26" x2="0" y2="-18" stroke={i} strokeWidth="0.8"/>
-        <line x1="-6" y1="-23" x2="6" y2="-23" stroke={i} strokeWidth="0.8"/>
-        <rect x="-7" y="10" width="14" height="7" rx="3" stroke={i} strokeWidth="1.1"/>
-        <circle cx="6" cy="13.5" r="1.5" stroke={c2} strokeWidth="0.8"/>
-        <line x1="-5" y1="13.5" x2="-2" y2="13.5" stroke={i} strokeWidth="0.9"/>
-        <line x1="-3.5" y1="12" x2="-3.5" y2="15" stroke={i} strokeWidth="0.9"/>
+        <path d="M-16 14 L-6 2 L4 8 L14 -6 L22 14" stroke={f} strokeWidth="0.9"/>
+        <line x1="-10" y1="14" x2="-10" y2="0" stroke={c1} strokeWidth="1.4"/>
+        <line x1="10" y1="14" x2="10" y2="0" stroke={c1} strokeWidth="1.4"/>
+        <line x1="-14" y1="2" x2="14" y2="2" stroke={c1} strokeWidth="1.6"/>
       </g>
     );
-    if (tl.includes('nakano broadway') || tl.includes('mandarake')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-15" y="-20" width="30" height="40" rx="1" stroke={i} strokeWidth="1.2"/>
-        <line x1="-15" y1="-8" x2="15" y2="-8" stroke={i} strokeWidth="0.8"/>
-        <line x1="-15" y1="4" x2="15" y2="4" stroke={i} strokeWidth="0.8"/>
-        <line x1="-15" y1="16" x2="15" y2="16" stroke={i} strokeWidth="0.8"/>
-        <line x1="0" y1="-20" x2="0" y2="20" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="-7" cy="-14" rx="3" ry="4" stroke={c2} strokeWidth="1"/>
-        <ellipse cx="7" cy="-14" rx="3" ry="4" stroke={c2} strokeWidth="1"/>
-        <rect x="-13" y="7" width="3" height="8" stroke={c2} strokeWidth="0.9"/>
-        <rect x="-9" y="7" width="3" height="8" stroke={c2} strokeWidth="0.9"/>
-        <rect x="-5" y="7" width="3" height="8" stroke={c2} strokeWidth="0.9"/>
-        <rect x="3" y="7" width="3" height="8" stroke={c2} strokeWidth="0.9"/>
-        <rect x="7" y="7" width="3" height="8" stroke={c2} strokeWidth="0.9"/>
-      </g>
-    );
-    if (tl.includes('ghibli') || tl.includes('miyazaki') || tl.includes('totoro')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="0" cy="8" rx="14" ry="16" stroke={i} strokeWidth="1.3"/>
-        <path d="M-10 -4 L-14 -18 L-6 -8" stroke={i} strokeWidth="1.1"/>
-        <path d="M10 -4 L14 -18 L6 -8" stroke={i} strokeWidth="1.1"/>
-        <circle cx="-5" cy="4" r="3.5" stroke={i} strokeWidth="1"/>
-        <circle cx="5" cy="4" r="3.5" stroke={i} strokeWidth="1"/>
-        <circle cx="-4" cy="3" r="1.5" fill={c2} fillOpacity="0.5" stroke={c2} strokeWidth="0.5"/>
-        <circle cx="6" cy="3" r="1.5" fill={c2} fillOpacity="0.5" stroke={c2} strokeWidth="0.5"/>
-        <ellipse cx="0" cy="10" rx="2.5" ry="1.5" stroke={i} strokeWidth="0.9"/>
-        <path d="M-8 15 Q0 20 8 15" stroke={i} strokeWidth="1"/>
-      </g>
-    );
-    if (tl.includes('takeshita') || tl.includes('harajuku')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-16" y="-22" width="32" height="12" rx="3" stroke={i} strokeWidth="1.2"/>
-        <text x="0" y="-13" fontSize="7" textAnchor="middle" stroke="none" fill={c2} fontFamily="sans-serif">竹下通り</text>
-        <circle cx="0" cy="5" r="6" stroke={i} strokeWidth="1.1"/>
-        <line x1="0" y1="11" x2="0" y2="20" stroke={i} strokeWidth="1"/>
-        <line x1="-10" y1="15" x2="10" y2="15" stroke={i} strokeWidth="1"/>
-        <path d="M-7 -1 Q0 -7 7 -1" stroke={c2} strokeWidth="0.9"/>
-        <path d="M13 8 L16 16 L19 8 Z" stroke={c2} strokeWidth="0.9"/>
-      </g>
-    );
-    // ── nightlife ───────────────────────────────────────────────────────────
-    if (tl.includes('kabukicho') || tl.includes('golden gai')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-15" y="-18" width="30" height="20" rx="3" stroke={i} strokeWidth="1.3"/>
-        <rect x="-11" y="-14" width="22" height="12" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <line x1="-4" y1="-12" x2="-4" y2="-4" stroke={i} strokeWidth="0.9"/>
-        <line x1="-8" y1="-8" x2="-0" y2="-8" stroke={i} strokeWidth="0.9"/>
-        <path d="M4 -12 L8 -4 L12 -12" stroke={c2} strokeWidth="0.9"/>
-        <line x1="16" y1="-14" x2="16" y2="-2" stroke={i} strokeWidth="0.9"/>
-        <line x1="13" y1="-10" x2="19" y2="-6" stroke={i} strokeWidth="0.9"/>
-        <rect x="-13" y="6" width="10" height="14" rx="1" stroke={i} strokeWidth="1"/>
-        <rect x="3" y="8" width="10" height="12" rx="1" stroke={i} strokeWidth="1"/>
-        <ellipse cx="-8" cy="21" rx="2.5" ry="1.5" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="-3" cy="21" rx="2.5" ry="1.5" stroke={i} strokeWidth="0.8"/>
-        <line x1="-8" y1="20" x2="-8" y2="26" stroke={i} strokeWidth="0.8"/>
-        <line x1="-3" y1="20" x2="-3" y2="26" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
-    if (tl.includes('yurakucho') || tl.includes('izakaya row')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-18 0 Q0 -12 18 0" stroke={i} strokeWidth="1.2"/>
-        <line x1="-18" y1="0" x2="-18" y2="12" stroke={i} strokeWidth="1"/>
-        <line x1="18" y1="0" x2="18" y2="12" stroke={i} strokeWidth="1"/>
-        <line x1="-18" y1="-7" x2="18" y2="-7" stroke={i} strokeWidth="0.8"/>
-        <line x1="-18" y1="-11" x2="18" y2="-11" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="-7" cy="-2" rx="3" ry="5" fill={c2} fillOpacity="0.25" stroke={c2} strokeWidth="0.9"/>
-        <ellipse cx="7" cy="-2" rx="3" ry="5" fill={c2} fillOpacity="0.25" stroke={c2} strokeWidth="0.9"/>
-        <line x1="-7" y1="-8" x2="-7" y2="-7" stroke={i} strokeWidth="0.8"/>
-        <line x1="7" y1="-8" x2="7" y2="-7" stroke={i} strokeWidth="0.8"/>
-        <rect x="-14" y="12" width="28" height="12" rx="1" stroke={i} strokeWidth="1.1"/>
-        <line x1="-14" y1="17" x2="14" y2="17" stroke={i} strokeWidth="0.8"/>
-        <line x1="-7" y1="2" x2="-7" y2="15" stroke={c2} strokeWidth="1.1"/>
-        <circle cx="-7" cy="4" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="-7" cy="9" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <line x1="5" y1="2" x2="5" y2="15" stroke={c2} strokeWidth="1.1"/>
-        <circle cx="5" cy="4" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="5" cy="9" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-      </g>
-    );
-    // ── Hakone / mountain ────────────────────────────────────────────────────
-    if (tl.includes('romancecar') || (tl.includes('hakone') && tl.includes('train'))) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-20 10 L-10 -2 L4 4 L12 -12 L22 4" stroke={i} strokeWidth="1.1"/>
-        <rect x="-14" y="4" width="28" height="10" rx="3" stroke={i} strokeWidth="1.2"/>
-        <rect x="-11" y="6" width="6" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <rect x="-3" y="6" width="6" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <rect x="5" y="6" width="6" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <path d="M14 5 Q20 5 20 10 Q20 14 14 14" stroke={i} strokeWidth="1.2"/>
-        <circle cx="-7" cy="14" r="3" stroke={i} strokeWidth="1"/>
-        <circle cx="8" cy="14" r="3" stroke={i} strokeWidth="1"/>
-      </g>
-    );
-    if (tl.includes('owakudani') || tl.includes('volcanic')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-20 16 L-8 -4 L4 8 L12 -16 L24 6" stroke={i} strokeWidth="1.2"/>
-        <path d="M-8 -4 Q-10 -14 -7 -22 Q-4 -28 -8 -30" stroke={i} strokeWidth="1.1"/>
-        <path d="M4 8 Q2 -4 6 -14 Q10 -22 7 -28" stroke={c2} strokeWidth="1.1"/>
-        <path d="M12 -16 Q12 -24 16 -30 Q20 -34 16 -36" stroke={i} strokeWidth="1"/>
-        <ellipse cx="14" cy="20" rx="5" ry="6" stroke={i} strokeWidth="1.1"/>
-        <path d="M9 21 Q14 18 19 21" stroke={i} strokeWidth="0.9"/>
-      </g>
-    );
-    if (tl.includes('lake ashi') || tl.includes('ashinoko') || tl.includes('boat crossing')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-6 -18 L0 -28 L6 -18" stroke={i} strokeWidth="1.2"/>
-        <path d="M-14 -8 L0 -28 L14 -8" stroke={i} strokeWidth="1.1"/>
-        <ellipse cx="0" cy="4" rx="22" ry="10" stroke={i} strokeWidth="1"/>
-        <line x1="-18" y1="-16" x2="-18" y2="6" stroke={c2} strokeWidth="1.1"/>
-        <line x1="-11" y1="-16" x2="-11" y2="6" stroke={c2} strokeWidth="1.1"/>
-        <line x1="-21" y1="-13" x2="-8" y2="-13" stroke={c2} strokeWidth="1.1"/>
-        <line x1="-20" y1="-9" x2="-9" y2="-9" stroke={c2} strokeWidth="0.9"/>
-        <path d="M5 2 Q10 -2 20 0 Q22 6 5 6 Z" stroke={i} strokeWidth="1"/>
-        <line x1="12" y1="-2" x2="12" y2="-8" stroke={i} strokeWidth="0.9"/>
-        <path d="M12 -8 L19 -4 L12 -2 Z" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-      </g>
-    );
-    if (tl.includes('gora kadan') || (tl.includes('ryokan') && tl.includes('hakone'))) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-18 2 L0 -14 L18 2" stroke={i} strokeWidth="1.2"/>
-        <rect x="-14" y="2" width="28" height="20" rx="1" stroke={i} strokeWidth="1.1"/>
-        <line x1="-6" y1="2" x2="-6" y2="22" stroke={i} strokeWidth="0.9"/>
-        <line x1="6" y1="2" x2="6" y2="22" stroke={i} strokeWidth="0.9"/>
-        <line x1="-14" y1="12" x2="14" y2="12" stroke={i} strokeWidth="0.9"/>
-        <rect x="2" y="-22" width="5" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <line x1="4.5" y1="-30" x2="4.5" y2="-22" stroke={c2} strokeWidth="0.8"/>
-        <path d="M-4" y="-18" width="1" stroke={c2} strokeWidth="0.8"/>
-        <ellipse cx="-18" cy="14" rx="2" ry="4" fill={c2} fillOpacity="0.2" stroke={c2} strokeWidth="0.8"/>
-        <line x1="-22" y1="8" x2="-22" y2="18" stroke={i} strokeWidth="0.8"/>
-        <rect x="-24" y="6" width="6" height="4" rx="0.5" stroke={i} strokeWidth="0.7"/>
-      </g>
-    );
-    // ── Nara ────────────────────────────────────────────────────────────────
-    if (tl.includes('nara') || tl.includes('todai-ji') || tl.includes('deer')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="-8" cy="8" rx="8" ry="6" stroke={i} strokeWidth="1.1"/>
-        <line x1="-8" y1="2" x2="-9" y2="-8" stroke={i} strokeWidth="1"/>
-        <circle cx="-9" cy="-11" r="4" stroke={i} strokeWidth="1.1"/>
-        <path d="M-11 -14 L-14 -22 L-12 -18" stroke={i} strokeWidth="0.9"/>
-        <path d="M-6 -14 L-3 -21 L-5 -18" stroke={i} strokeWidth="0.9"/>
-        <line x1="-14" y1="12" x2="-15" y2="20" stroke={i} strokeWidth="0.9"/>
-        <line x1="-6" y1="12" x2="-5" y2="20" stroke={i} strokeWidth="0.9"/>
-        <rect x="4" y="-8" width="18" height="22" rx="1" stroke={i} strokeWidth="1.1"/>
-        <path d="M2" y="-8" stroke={i} strokeWidth="1.2"/>
-        <path d="M2 -8 L13 -18 L24 -8" stroke={i} strokeWidth="1.2"/>
-        <line x1="4" y1="4" x2="22" y2="4" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="13" cy="0" rx="4" ry="5" stroke={c2} strokeWidth="0.9"/>
-      </g>
-    );
-    // ── Osaka extras ─────────────────────────────────────────────────────────
-    if (tl.includes('hozenji') || tl.includes('yokocho')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-4" y="-2" width="8" height="18" rx="1" stroke={i} strokeWidth="1.1"/>
-        <ellipse cx="0" cy="-5" rx="6" ry="7" stroke={i} strokeWidth="1.2"/>
-        <path d="M-5" y="-2" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-5 -2 Q-8 2 -7 6 Q-5 10 -3 8" stroke={c2} strokeWidth="0.9"/>
-        <path d="M5 -2 Q8 2 7 6 Q5 10 3 8" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-4 6 Q-7 10 -6 14" stroke={c2} strokeWidth="0.8"/>
-        <path d="M4 6 Q7 10 6 14" stroke={c2} strokeWidth="0.8"/>
-        <line x1="-16" y1="-22" x2="-16" y2="22" stroke={i} strokeWidth="1"/>
-        <line x1="16" y1="-22" x2="16" y2="22" stroke={i} strokeWidth="1"/>
-        <ellipse cx="0" cy="18" rx="3" ry="5" fill={c2} fillOpacity="0.2" stroke={c2} strokeWidth="0.8"/>
-      </g>
-    );
-    if (tl.includes('golf club') || tl.includes('golf') || tl.includes('kobe golf')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-22 8 Q-8 2 4 6 Q14 10 22 4" stroke={i} strokeWidth="1.1"/>
-        <path d="M-22 14 Q0 8 22 12" stroke={i} strokeWidth="0.8"/>
-        <line x1="8" y1="-14" x2="8" y2="8" stroke={i} strokeWidth="1"/>
-        <path d="M8 -14 L18 -8 L8 -4 Z" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.8"/>
-        <line x1="-12" y1="-18" x2="6" y2="8" stroke={i} strokeWidth="1.2"/>
-        <ellipse cx="7" cy="9" rx="4" ry="2.5" stroke={i} strokeWidth="1" transform="rotate(-25 7 9)"/>
-        <path d="M-24" y="-8" width="1" stroke={i} strokeWidth="0.8"/>
-        <path d="M-24 -4 Q-10 -8 6 -5 Q16 -2 24 -6" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
-    // ── Kyoto extras ─────────────────────────────────────────────────────────
-    if (tl.includes('daitoku-ji') || tl.includes('daitokuji') || tl.includes('sub-temple')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-16" y="4" width="32" height="18" rx="1" stroke={i} strokeWidth="1.1"/>
-        <path d="M-16 4 Q-12 -6 0 -8 Q12 -6 16 4" stroke={i} strokeWidth="0.9"/>
-        <path d="M-18 4 Q0 -12 18 4" stroke={i} strokeWidth="1.2"/>
-        <path d="M-20 16 Q0 10 20 16 Q20 22 -20 22" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-18 20 Q-10 17 0 20 Q10 17 18 20" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-18 24 Q-12 21 0 24 Q12 21 18 24" stroke={c2} strokeWidth="0.9"/>
-        <ellipse cx="-6" cy="16" rx="3" ry="2" stroke={c2} strokeWidth="0.8"/>
-        <ellipse cx="8" cy="12" rx="4" ry="2.5" stroke={c2} strokeWidth="0.8"/>
-        <rect x="-6" y="-22" width="12" height="16" rx="1" stroke={i} strokeWidth="1"/>
-        <line x1="0" y1="-22" x2="0" y2="-6" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
-    if (tl.includes('nijo castle') || tl.includes('nijo')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-16" y="-4" width="32" height="24" rx="1" stroke={i} strokeWidth="1.1"/>
-        <path d="M-18" y="-4" stroke={i} strokeWidth="1.2"/>
-        <path d="M-18 -4 L0 -18 L18 -4" stroke={i} strokeWidth="1.2"/>
-        <path d="M-12 4 L0 -6 L12 4" stroke={i} strokeWidth="0.9"/>
-        <rect x="-8" y="-2" width="5" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <rect x="3" y="-2" width="5" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <rect x="-8" y="8" width="5" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <rect x="3" y="8" width="5" height="6" rx="1" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-20 22 Q0 18 20 22" stroke={i} strokeWidth="0.9"/>
-        <path d="M-22 26 Q0 22 22 26" stroke={i} strokeWidth="0.8"/>
-        <path d="M-16 16 Q-8 14 0 16 Q8 14 16 16" stroke={c2} strokeWidth="0.7"/>
-      </g>
-    );
-    if (tl.includes('shibuya sky') || tl.includes('shibuya scramble') || tl.includes('shibuya')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="-5" y="-28" width="10" height="40" rx="1.5" stroke={i} strokeWidth="1.1"/>
-        <rect x="-10" y="-32" width="20" height="8" rx="2" stroke={i} strokeWidth="1.2"/>
-        <line x1="-22" y1="18" x2="22" y2="18" stroke={i} strokeWidth="1.2"/>
-        <line x1="-22" y1="22" x2="22" y2="22" stroke={i} strokeWidth="0.9"/>
-        <line x1="-18" y1="26" x2="18" y2="26" stroke={i} strokeWidth="0.8"/>
-        <circle cx="-12" cy="20" r="2" fill={c2} fillOpacity="0.5" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="2" cy="24" r="2" fill={c2} fillOpacity="0.5" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="14" cy="20" r="2" fill={c2} fillOpacity="0.5" stroke={c2} strokeWidth="0.7"/>
-        <path d="M-24 -8 L-16 -16 L-14 -4" stroke={c2} strokeWidth="0.7"/>
-        <path d="M16 -4 L18 -14 L24 -6" stroke={c2} strokeWidth="0.7"/>
-      </g>
-    );
-
-    // ── Bourdain food ────────────────────────────────────────────────────────
-    if (tl.includes('soba') || tl.includes('yabu')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="0" cy="4" rx="18" ry="12" stroke={i} strokeWidth="1.2"/>
-        <ellipse cx="0" cy="2" rx="14" ry="9" stroke={i} strokeWidth="0.8"/>
-        <path d="M-10 -2 Q-6 2 -2 -1 Q2 3 6 0 Q10 4 13 1" stroke={c2} strokeWidth="1.1"/>
-        <path d="M-12 2 Q-7 6 -3 3 Q1 7 5 4 Q9 8 12 5" stroke={c2} strokeWidth="1"/>
-        <path d="M-9 6 Q-4 10 0 7 Q4 11 8 8" stroke={c2} strokeWidth="0.9"/>
-        <line x1="-4" y1="-18" x2="-2" y2="-10" stroke={i} strokeWidth="1.1"/>
-        <line x1="4" y1="-18" x2="2" y2="-10" stroke={i} strokeWidth="1.1"/>
-      </g>
-    );
-    if (tl.includes('ramen') || (tl.includes('midnight') && tl.includes('ramen'))) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="0" cy="6" rx="18" ry="12" stroke={i} strokeWidth="1.2"/>
-        <ellipse cx="0" cy="4" rx="14" ry="9" stroke={i} strokeWidth="0.8"/>
-        <path d="M-12 0 Q-8 4 -4 1 Q0 5 4 2 Q8 6 12 3" stroke={c2} strokeWidth="1.1"/>
-        <path d="M-10 4 Q-6 8 -2 5 Q2 9 6 6 Q10 10 13 7" stroke={c2} strokeWidth="1"/>
-        <ellipse cx="6" cy="-2" rx="4" ry="5" stroke={i} strokeWidth="0.9"/>
-        <path d="M-8 -8 Q-6 -14 -4 -8" stroke={c2} strokeWidth="0.8"/>
-        <path d="M0 -6 Q2 -14 4 -6" stroke={c2} strokeWidth="0.8"/>
-        <path d="M6 -8 Q8 -16 10 -8" stroke={c2} strokeWidth="0.8"/>
-      </g>
-    );
-    if (tl.includes('gyoza')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M-16 4 Q-14 -6 -8 -8 Q0 -10 8 -8 Q14 -6 16 4 Q14 10 0 12 Q-14 10 -16 4Z" stroke={i} strokeWidth="1.2"/>
-        <path d="M-16 4 Q0 6 16 4" stroke={i} strokeWidth="0.8"/>
-        <path d="M-10 -4 Q-8 0 -10 4" stroke={i} strokeWidth="0.8"/>
-        <path d="M-4 -6 Q-2 -1 -4 4" stroke={i} strokeWidth="0.8"/>
-        <path d="M2 -6 Q4 -1 2 4" stroke={i} strokeWidth="0.8"/>
-        <path d="M8 -4 Q10 0 8 4" stroke={i} strokeWidth="0.8"/>
-        <ellipse cx="-10" cy="12" rx="3" ry="1.5" fill={c2} fillOpacity="0.2" stroke={c2} strokeWidth="0.7"/>
-        <ellipse cx="0" cy="14" rx="3" ry="1.5" fill={c2} fillOpacity="0.2" stroke={c2} strokeWidth="0.7"/>
-        <ellipse cx="10" cy="12" rx="3" ry="1.5" fill={c2} fillOpacity="0.2" stroke={c2} strokeWidth="0.7"/>
-      </g>
-    );
-    if (tl.includes('takoyaki') || tl.includes('wanaka')) return (
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="-12" cy="4" r="6" stroke={i} strokeWidth="1.2"/>
-        <circle cx="0" cy="4" r="6" stroke={i} strokeWidth="1.2"/>
-        <circle cx="12" cy="4" r="6" stroke={i} strokeWidth="1.2"/>
-        <circle cx="-12" cy="4" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="0" cy="4" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <circle cx="12" cy="4" r="2" fill={c2} fillOpacity="0.4" stroke={c2} strokeWidth="0.7"/>
-        <path d="M-16 -4 Q0 -8 16 -4" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-14 12 Q0 16 14 12" stroke={c2} strokeWidth="0.9"/>
-        <path d="M-10 -14 Q-8 -20 -6 -14" stroke={i} strokeWidth="0.8"/>
-        <path d="M2 -16 Q4 -22 6 -16" stroke={i} strokeWidth="0.8"/>
-      </g>
-    );
-
   };
 
   const VineDecor = () => {
