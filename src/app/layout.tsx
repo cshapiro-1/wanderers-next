@@ -5,11 +5,6 @@ export const metadata: Metadata = {
   title: "The Wanderer's Sketchbook",
   description: "An 18-Day Journey Through Landscapes, Flavors, and Hidden Valleys",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Wanderer",
-  },
 };
 
 export const viewport: Viewport = {
