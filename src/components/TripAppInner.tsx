@@ -3572,34 +3572,34 @@ const HotelsPanel: React.FC = () => {
 const flightLegs = [
   {
     label: 'Outbound',
-    airline: 'ANA — All Nippon Airways',
-    flight: 'NH 111',
-    route: 'ORD → HND',
+    airline: 'ANA — All Nippon Airways (Star Alliance 5-Star)',
+    flight: 'NH 11',
+    route: 'ORD → NRT',
     from: "Chicago O'Hare (ORD)",
-    to: 'Tokyo Haneda (HND)',
-    departs: '11:55 PM',
-    arrives: '4:05 AM +2',
-    date: 'Thu, May 28, 2027',
-    arrivalDate: 'Sat, May 30, 2027',
-    duration: '13h 10m · Nonstop',
-    cabin: 'Premium Economy',
-    terminal: 'ORD Terminal 5 · HND Terminal 3',
+    to: 'Tokyo Narita (NRT)',
+    departs: '11:20 AM',
+    arrives: '02:15 PM +1',
+    date: 'Thu, May 13, 2027',
+    arrivalDate: 'Fri, May 14, 2027',
+    duration: '12h 55m · Nonstop',
+    cabin: 'Premium Economy (38" Pitch · Lounge Access · 2-4-2)',
+    terminal: 'ORD Terminal 1 (Star Alliance) · NRT Terminal 1',
     color: '#c87e18',
   },
   {
     label: 'Return',
-    airline: 'ANA — All Nippon Airways',
-    flight: 'NH 843',
-    route: 'KIX → ORD',
-    from: 'Osaka Kansai (KIX)',
+    airline: 'ANA — All Nippon Airways (Star Alliance 5-Star)',
+    flight: 'NH 12',
+    route: 'NRT → ORD',
+    from: 'Tokyo Narita (NRT)',
     to: "Chicago O'Hare (ORD)",
-    departs: '5:30 PM',
-    arrives: '4:35 PM',
-    date: 'Sun, Jun 14, 2027',
-    arrivalDate: 'Sun, Jun 14, 2027',
-    duration: '13h 05m · Nonstop',
-    cabin: 'Premium Economy',
-    terminal: 'KIX Terminal 1 · ORD Terminal 5',
+    departs: '05:00 PM',
+    arrives: '02:45 PM',
+    date: 'Mon, May 31, 2027',
+    arrivalDate: 'Mon, May 31, 2027',
+    duration: '11h 45m · Nonstop',
+    cabin: 'Premium Economy (38" Pitch · Lounge Access · 2-4-2)',
+    terminal: 'NRT Terminal 1 · ORD Terminal 1 (Star Alliance)',
     color: '#7a4a88',
   },
 ];
@@ -3613,7 +3613,7 @@ const FlightPanel: React.FC = () => {
       <div className="docs-page-header">
         <div>
           <h2 className="docs-page-title">✈ Flight Itinerary</h2>
-          <p className="docs-page-sub">Open-jaw · ORD → HND / KIX → ORD · ANA Premium Economy</p>
+          <p className="docs-page-sub">Roundtrip Nonstop · ORD ↔ NRT · ANA NH 11 / 12 · $3,190 Total for 2 ($1,595/ea · Saved $1,397 vs JAL)</p>
         </div>
         <button className="docs-close-btn" onClick={toggleFlight}>✕ Close</button>
       </div>
