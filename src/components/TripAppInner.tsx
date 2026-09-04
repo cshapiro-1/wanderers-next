@@ -2698,9 +2698,7 @@ const JournalPane: React.FC = () => {
               <ReturnTransitCard data={returnTransits[activeDay]} hotelName={hotelAnchors[activeDay]!.name} />
             )}
           </div>
-          <div className="day-scroll-vig">
-            <DayScrollVignette acts={_acts} day={activeDay} />
-          </div>
+          
         </div>
         <MealsSection />
         <ReservationsPanel />
@@ -2906,7 +2904,7 @@ const StoryOverlay: React.FC = () => {
 };
 
 
-const MapEngine: React.FC<{ activeDay: number }> = ({ activeDay }) => {
+const MapEngine: React.FC<{ activeDay: number; tilt3d?: boolean }> = ({ activeDay, tilt3d }) => {
   const googleMap = useMap('travel_map');
   const { selectedActivity, hoveredActivityKey, doneActivities } = useStore();
   const [markerData, setMarkerData] = useState<Array<{ marker: any; iw: any; lat: number; lng: number; actKey: string; originalIconUrl: string }>>([]);
@@ -3169,6 +3167,7 @@ const PARCHMENT_MAP_STYLE: any[] = [
 const MapPane: React.FC = () => {
   const { activeDay } = useStore();
   const [mapType, setMapType] = useState<'roadmap' | 'hybrid'>('roadmap');
+  const [tilt3d, setTilt3d] = useState(false);
   const [fading, setFading] = useState(false);
   const prevDayRef = React.useRef(activeDay);
   React.useEffect(() => {
@@ -3193,7 +3192,7 @@ const MapPane: React.FC = () => {
         clickableIcons={false}
         style={{ width: '100%', height: '100%' }}
       >
-        <MapEngine activeDay={activeDay} />
+        <MapEngine activeDay={activeDay} tilt3d={tilt3d} />
         <MapControl position={ControlPosition.TOP_RIGHT}>
           <div className="map-controls-overlay">
             <button onClick={() => setMapType('roadmap')} className={`map-control-btn ${mapType === 'roadmap' ? 'active' : ''}`}>Sketch Map</button>
