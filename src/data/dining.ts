@@ -14,6 +14,7 @@ export const restaurantPrices: Record<string, number> = {
   'Shinjuku Jazz Kissa': 22,              // cover charge + 2 drinks ¥2.5k–4k
   'Gyoza Standing Bar, Shinjuku-sanchome': 14, // 3 rounds + beer ¥1.5k–2.5k
   'Japanese Curry at Nakamura-ya, Shinjuku': 20, // classic curry set ¥2,000–3,000
+  'Post-Concert Ramen & Highballs, Ginza': 16,  // late ramen + highballs ¥2,000–2,800
   'Kaiseki Dinner, Gora Kadan': 0,        // included in ryokan rate
   'Asaba Kaiseki & Noh Stage': 0,         // included in ryokan rate
   'Kushikatsu Daruma, Shinsekai': 22,     // skewer set ¥3,000–3,500
@@ -45,6 +46,7 @@ export const restaurantNotes: Record<string, string> = {
 
 export const activityPrices: Record<string, number> = {
   'Shinjuku Gyoen National Garden': 3,
+  'Radiohead — Live at Saitama Super Arena': 130, // Arena ticket ~¥18,000–22,000 = $130
   'Nakanoshima Riverside Walk': 0,
   'Rokko Kokusai Golf Club': 175,
   'Kasuga Taisha Shrine': 3,
