@@ -9,32 +9,32 @@ export const regionColors: Record<string, string> = {
 };
 
 export const regionMap: Record<number, Region> = {
-  1:'tokyo', 2:'tokyo', 3:'tokyo', 4:'tokyo', 5:'tokyo',
-  6:'hakone', 7:'hakone',
+  1:'kyoto', 2:'kyoto', 3:'kyoto', 4:'kyoto', 5:'kyoto', 6:'kyoto', 7:'kyoto',
   8:'osaka', 9:'osaka', 10:'osaka', 11:'osaka', 12:'osaka',
-  13:'kyoto', 14:'kyoto', 15:'kyoto', 16:'kyoto', 17:'kyoto', 18:'kyoto', 19:'kyoto',
+  13:'hakone', 14:'hakone',
+  15:'tokyo', 16:'tokyo', 17:'tokyo', 18:'tokyo', 19:'tokyo',
 };
 
 export const hotelAnchors: Record<number, HotelAnchor | null> = {
   1:  null,
-  2:  { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
-  3:  { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
-  4:  { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
-  5:  { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
-  6:  { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:false },
-  7:  { lat:35.2466, lng:139.0671, name:'Gora Kadan',             loop:true },
-  8:  { lat:35.2466, lng:139.0671, name:'Gora Kadan',             loop:false },
+  2:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
+  3:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
+  4:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
+  5:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
+  6:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
+  7:  { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:false },
+  8:  { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:true },
   9:  { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:true },
   10: { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:true },
   11: { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:true },
-  12: { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:true },
-  13: { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:false },
-  14: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
-  15: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
-  16: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
-  17: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
-  18: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:true },
-  19: { lat:34.9875, lng:135.7726, name:'Hyatt Regency Kyoto',    loop:false },
+  12: { lat:34.7042, lng:135.4960, name:'Conrad Osaka',           loop:false },
+  13: { lat:35.2466, lng:139.0671, name:'Gora Kadan',             loop:true },
+  14: { lat:35.2466, lng:139.0671, name:'Gora Kadan',             loop:false },
+  15: { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
+  16: { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
+  17: { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
+  18: { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:true },
+  19: { lat:35.6717, lng:139.7645, name:'Hyatt Centric Ginza',    loop:false },
 };
 
 export const REGION_HEROES: Record<string, { gradient: string; tagline: string }> = {
@@ -64,15 +64,15 @@ export const typeLabel: Record<string, string> = {
 };
 
 export const regionMap2: Record<number, string> = {
-  1:'tokyo', 2:'tokyo', 3:'tokyo', 4:'tokyo', 5:'tokyo',
-  6:'hakone', 7:'hakone',
+  1:'kyoto', 2:'kyoto', 3:'kyoto', 4:'kyoto', 5:'kyoto', 6:'kyoto', 7:'kyoto',
   8:'osaka', 9:'osaka', 10:'osaka', 11:'osaka', 12:'osaka',
-  13:'kyoto', 14:'kyoto', 15:'kyoto', 16:'kyoto', 17:'kyoto', 18:'kyoto', 19:'kyoto',
+  13:'hakone', 14:'hakone',
+  15:'tokyo', 16:'tokyo', 17:'tokyo', 18:'tokyo', 19:'tokyo',
 };
 
 export const regionGroups = [
-  { name: 'Tokyo',  color: '#c87e18', days: [1,2,3,4,5]            },
-  { name: 'Hakone', color: '#5878a0', days: [6,7]                   },
+  { name: 'Kyoto',  color: '#7a4a88', days: [1,2,3,4,5,6,7]         },
   { name: 'Osaka',  color: '#b84428', days: [8,9,10,11,12]         },
-  { name: 'Kyoto',  color: '#7a4a88', days: [13,14,15,16,17,18,19] },
+  { name: 'Hakone', color: '#5878a0', days: [13,14]                 },
+  { name: 'Tokyo',  color: '#c87e18', days: [15,16,17,18,19]        },
 ];
