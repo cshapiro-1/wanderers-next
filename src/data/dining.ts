@@ -128,4 +128,7 @@ export const activityPrices: Record<string, number> = {
   'Shimokitazawa Vintage & Vinyl Hunt': 0,
   'Komehyo Shinjuku — Vintage Watches': 0,
   'Hamarikyu Imperial Gardens': 2,
+  'Nara: Todai-ji & Great Buddha': 4,
+  'Nara Park — Bowing Sika Deer': 0,
+  'Amerika-mura & Shinsaibashi': 0,
 };
