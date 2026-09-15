@@ -1,19 +1,26 @@
 export const restaurantPrices: Record<string, number> = {
   'Pontocho — Afternoon Sake': 25,
   'Sushi Counter, Ginza': 250,            // top Ginza omakase ¥35k–45k/pp
+  'Sushi Counter Omakase, Ginza': 250,    // top Ginza omakase ¥35k–45k/pp
   'Bar High Five, Ginza': 55,             // 3 cocktails/pp ¥6k–9k at top-tier bar
   'Yurakucho Izakaya Row': 35,            // yakitori + beer ¥4k–6k
   'Kanda Yabu Soba': 20,                  // soba lunch ¥1,800–3,000
   'Cotton Club, Marunouchi': 55,          // ticket + table charge ¥6k–8k/pp
+  'Cotton Club Jazz, Marunouchi': 55,
   'Tempura Daikokuya, Asakusa': 28,       // Edo tempura set ¥3,500–4,500
   'Omurice at Rengatei, Ginza': 22,       // hashed beef + omurice ¥2,200–3,500
   'Omoide Yokocho': 35,                   // yakitori counter, 2 hrs ¥4k–6k
+  'Omoide Yokocho & Golden Gai': 35,
   'Kabukicho & Golden Gai': 25,           // bar covers + drinks ¥3k–5k
   'Midnight Ramen, Shinjuku': 12,         // late ramen ¥1,200–1,600
   'Tsukiji Outer Market': 22,             // market stall breakfast ¥2k–3.5k
   'Shinjuku Jazz Kissa': 22,              // cover charge + 2 drinks ¥2.5k–4k
   'Gyoza Standing Bar, Shinjuku-sanchome': 14, // 3 rounds + beer ¥1.5k–2.5k
   'Japanese Curry at Nakamura-ya, Shinjuku': 20, // classic curry set ¥2,000–3,000
+  'Curry Lunch at Nakamura-ya, Shinjuku': 20,
+  'Kimuraya Honten Bakery': 12,
+  'Robata Dining, Roppongi': 75,
+  'Dotonbori & Kushikatsu Daruma': 25,
   'Post-Concert Ramen & Highballs, Ginza': 16,  // late ramen + highballs ¥2,000–2,800
   'Kaiseki Dinner, Gora Kadan': 0,        // included in ryokan rate
   'Asaba Kaiseki & Noh Stage': 0,         // included in ryokan rate
@@ -95,4 +102,30 @@ export const activityPrices: Record<string, number> = {
   'Imperial Palace East Gardens': 0,
   'Kyoto → KIX Haruka Express': 24,    // ¥3,600 reserved = $24
   'Kansai International Airport': 0,
+  'Traditional Kyoto Shiatsu Massage, RIRAKU': 140,
+  'In-Room Traditional Shiatsu Massage': 0,
+  'Morning Onsen, Gora Kadan': 0,
+  'Owakudani Volcanic Vents': 15,
+  'Hakone Open-Air Museum': 12,
+  'Arashiyama Bamboo Grove & Tenryu-ji': 5,
+  'Hanshin Tigers at Koshien Stadium': 35,
+  'Senso-ji Temple & Nakamise-dori': 0,
+  'Sumida River Water Bus Cruise': 10,
+  'Arashio Stable — Sumo Morning Practice': 0,
+  'Akihabara Electric Town': 0,
+  'Meiji Jingu Sanctuary & Forest': 0,
+  'Omotesando & Cat Street': 0,
+  'Nezu Museum & Iris Gardens': 9,
+  'Shibuya Scramble & Nonbei Yokocho': 0,
+  'Studio Ghibli Museum, Mitaka': 10,
+  'Inokashira Park Stroll': 0,
+  'Kichijoji Harmonica Yokocho': 0,
+  'Daikanyama T-Site & Tsutaya': 0,
+  'Nakameguro Canal Boutiques': 0,
+  'Mori Art Museum & Tokyo City View': 15,
+  'Yanaka Ginza — Shitamachi Quarter': 0,
+  'Tokyo National Museum, Ueno': 7,
+  'Shimokitazawa Vintage & Vinyl Hunt': 0,
+  'Komehyo Shinjuku — Vintage Watches': 0,
+  'Hamarikyu Imperial Gardens': 2,
 };
